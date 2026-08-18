@@ -1,0 +1,335 @@
+{
+  "invoices": [
+    {
+      "invoice_id": "bb9651f3-4870-48de-851f-5f6c246dee45",
+      "erp_key": "INV-000001",
+      "crm_key": "INV000001",
+      "exists_in_erp": true,
+      "exists_in_crm": true,
+      "expected_match": true
+    },
+    {
+      "invoice_id": "4c46c168-a49c-4fd6-9ac2-c38948994ad1",
+      "erp_key": "INV-000002",
+      "crm_key": "INV000002",
+      "exists_in_erp": true,
+      "exists_in_crm": true,
+      "expected_match": true
+    },
+    {
+      "invoice_id": "a876d6c9-5db5-4062-a569-3267552564e7",
+      "erp_key": "INV-000003",
+      "crm_key": "INV000003",
+      "exists_in_erp": true,
+      "exists_in_crm": true,
+      "expected_match": true
+    },
+    {
+      "invoice_id": "4da6ef1d-d797-41fb-8035-c5bf742a2ff6",
+      "erp_key": "INV-000004",
+      "crm_key": "INV000004",
+      "exists_in_erp": true,
+      "exists_in_crm": true,
+      "expected_match": true
+    },
+    {
+      "invoice_id": "02509452-2908-4df8-ae59-ce6b21121d84",
+      "erp_key": "INV-000005",
+      "crm_key": "INV000005",
+      "exists_in_erp": true,
+      "exists_in_crm": true,
+      "expected_match": true
+    },
+    {
+      "invoice_id": "4d069d9f-c762-446d-bec2-220ad56df1b7",
+      "erp_key": "INV-000006",
+      "crm_key": "INV000006",
+      "exists_in_erp": true,
+      "exists_in_crm": true,
+      "expected_match": true
+    },
+    {
+      "invoice_id": "52099775-2a03-4037-89fb-ca9727fdefcd",
+      "erp_key": "INV-000007",
+      "crm_key": "INV000007",
+      "exists_in_erp": true,
+      "exists_in_crm": true,
+      "expected_match": true
+    },
+    {
+      "invoice_id": "f27fdb0d-f237-4e25-bce4-898b810ed3d1",
+      "erp_key": "INV-000008",
+      "crm_key": "INV000008",
+      "exists_in_erp": true,
+      "exists_in_crm": true,
+      "expected_match": true
+    },
+    {
+      "invoice_id": "2db9a55b-d59a-4a30-a4c8-bf7ae0a1e014",
+      "erp_key": "INV-000009",
+      "crm_key": "INV000009",
+      "exists_in_erp": true,
+      "exists_in_crm": true,
+      "expected_match": true
+    },
+    {
+      "invoice_id": "40137ddc-2e32-40eb-a3c5-d001906096d6",
+      "erp_key": "INV-000010",
+      "crm_key": "INV000010",
+      "exists_in_erp": true,
+      "exists_in_crm": true,
+      "expected_match": true
+    },
+    {
+      "invoice_id": "3afb4bb8-c360-4ab1-a838-aba39bae34d8",
+      "erp_key": "INV-000011",
+      "crm_key": "INV000011",
+      "exists_in_erp": true,
+      "exists_in_crm": true,
+      "expected_match": true
+    },
+    {
+      "invoice_id": "ca8503cc-da2c-476c-ba20-57936d9be996",
+      "erp_key": "INV-000012",
+      "crm_key": "INV000012",
+      "exists_in_erp": true,
+      "exists_in_crm": true,
+      "expected_match": true
+    },
+    {
+      "invoice_id": "5e29e476-c974-41e2-86b1-c212db0c0da9",
+      "erp_key": "INV-000013",
+      "crm_key": "INV000013",
+      "exists_in_erp": true,
+      "exists_in_crm": true,
+      "expected_match": true
+    },
+    {
+      "invoice_id": "a0ba8350-2248-4e10-847e-99c5592b53d3",
+      "erp_key": "INV-000014",
+      "crm_key": "INV000014",
+      "exists_in_erp": true,
+      "exists_in_crm": true,
+      "expected_match": true
+    },
+    {
+      "invoice_id": "c27685be-f8e2-462d-bc34-788f390b7165",
+      "erp_key": "INV-000015",
+      "crm_key": "INV000015",
+      "exists_in_erp": true,
+      "exists_in_crm": true,
+      "expected_match": true
+    },
+    {
+      "invoice_id": "ca55385d-2dc5-46a2-9a02-70c4257c6361",
+      "erp_key": "INV-000016",
+      "crm_key": "INV000016",
+      "exists_in_erp": true,
+      "exists_in_crm": true,
+      "expected_match": true
+    },
+    {
+      "invoice_id": "4dc363a7-6a6e-4a15-9323-6ecf926ca444",
+      "erp_key": "INV-000017",
+      "crm_key": "INV000017",
+      "exists_in_erp": true,
+      "exists_in_crm": true,
+      "expected_match": true
+    },
+    {
+      "invoice_id": "c0f19125-fb10-4241-8b67-a24fa795bc12",
+      "erp_key": "INV-000018",
+      "crm_key": "INV000018",
+      "exists_in_erp": true,
+      "exists_in_crm": true,
+      "expected_match": true
+    },
+    {
+      "invoice_id": "6af03421-9b2a-4160-b739-97112881c16b",
+      "erp_key": "INV-000019",
+      "crm_key": "INV000019",
+      "exists_in_erp": true,
+      "exists_in_crm": true,
+      "expected_match": true
+    }
+  ],
+  "payments": [
+    {
+      "payment_id": "bb9651f3-4870-48de-851f-5f6c246dee45",
+      "erp_key": "PMT-000001",
+      "crm_key": "PAY000001",
+      "exists_in_erp": true,
+      "exists_in_crm": true,
+      "expected_match": true,
+      "amount_drift": 0.0,
+      "has_amount_mismatch": false
+    },
+    {
+      "payment_id": "48994ad1-3a4c-4954-8ad5-e273a876d6c9",
+      "erp_key": "PMT-000002",
+      "crm_key": null,
+      "exists_in_erp": true,
+      "exists_in_crm": false,
+      "expected_match": false,
+      "amount_drift": 0.0,
+      "has_amount_mismatch": false
+    },
+    {
+      "payment_id": "0c701874-ecfd-4380-92f7-2643f3161305",
+      "erp_key": "PMT-000003",
+      "crm_key": "PAY000003",
+      "exists_in_erp": true,
+      "exists_in_crm": true,
+      "expected_match": true,
+      "amount_drift": 0.0,
+      "has_amount_mismatch": false
+    },
+    {
+      "payment_id": "de239417-64d5-4bb9-8aa1-0b4bdcd78d8a",
+      "erp_key": "PMT-000004",
+      "crm_key": "PAY000004",
+      "exists_in_erp": true,
+      "exists_in_crm": true,
+      "expected_match": true,
+      "amount_drift": 0.0,
+      "has_amount_mismatch": false
+    },
+    {
+      "payment_id": "737d2029-448f-426c-8d06-9d9fa11da274",
+      "erp_key": "PMT-000005",
+      "crm_key": "PAY000005",
+      "exists_in_erp": true,
+      "exists_in_crm": true,
+      "expected_match": true,
+      "amount_drift": 0.0,
+      "has_amount_mismatch": false
+    },
+    {
+      "payment_id": "03723a5e-5b24-460f-a13c-097538152ea4",
+      "erp_key": "PMT-000006",
+      "crm_key": "PAY000006",
+      "exists_in_erp": true,
+      "exists_in_crm": true,
+      "expected_match": true,
+      "amount_drift": 0.0,
+      "has_amount_mismatch": false
+    },
+    {
+      "payment_id": "0fbf9542-76f8-4efb-b296-c6c0f27fdb0d",
+      "erp_key": "PMT-000007",
+      "crm_key": "PAY000007",
+      "exists_in_erp": true,
+      "exists_in_crm": true,
+      "expected_match": true,
+      "amount_drift": 0.0,
+      "has_amount_mismatch": false
+    },
+    {
+      "payment_id": "9ee0268e-d7bc-47cd-adb9-a55bd59afa30",
+      "erp_key": "PMT-000008",
+      "crm_key": "PAY000008",
+      "exists_in_erp": true,
+      "exists_in_crm": true,
+      "expected_match": true,
+      "amount_drift": 0.0,
+      "has_amount_mismatch": false
+    },
+    {
+      "payment_id": "ad27f0da-8e29-4f9e-8209-28462e3260eb",
+      "erp_key": "PMT-000009",
+      "crm_key": "PAY000009",
+      "exists_in_erp": true,
+      "exists_in_crm": true,
+      "expected_match": true,
+      "amount_drift": 0.0,
+      "has_amount_mismatch": false
+    },
+    {
+      "payment_id": "11175478-ad89-4837-8360-4ab1a838aba3",
+      "erp_key": "PMT-000010",
+      "crm_key": "PAY000010",
+      "exists_in_erp": true,
+      "exists_in_crm": true,
+      "expected_match": true,
+      "amount_drift": 0.0,
+      "has_amount_mismatch": false
+    },
+    {
+      "payment_id": "6222b3f6-ca85-43cc-9a2c-376c3a205793",
+      "erp_key": "PMT-000011",
+      "crm_key": "PAY000011",
+      "exists_in_erp": true,
+      "exists_in_crm": true,
+      "expected_match": true,
+      "amount_drift": 0.0,
+      "has_amount_mismatch": false
+    },
+    {
+      "payment_id": "5e29e476-c974-41e2-86b1-c212db0c0da9",
+      "erp_key": "PMT-000012",
+      "crm_key": "PAY000012",
+      "exists_in_erp": true,
+      "exists_in_crm": true,
+      "expected_match": true,
+      "amount_drift": 0.0,
+      "has_amount_mismatch": false
+    },
+    {
+      "payment_id": "b087bdc4-447e-49c5-992b-53d3c05beb75",
+      "erp_key": "PMT-000013",
+      "crm_key": "PAY000013",
+      "exists_in_erp": true,
+      "exists_in_crm": true,
+      "expected_match": true,
+      "amount_drift": 0.0,
+      "has_amount_mismatch": false
+    },
+    {
+      "payment_id": "7c34788f-390b-4165-81f7-4f807db87d01",
+      "erp_key": "PMT-000014",
+      "crm_key": "PAY000014",
+      "exists_in_erp": true,
+      "exists_in_crm": true,
+      "expected_match": true,
+      "amount_drift": 0.0,
+      "has_amount_mismatch": false
+    },
+    {
+      "payment_id": "b607d36b-a253-4506-90dd-acb972de3581",
+      "erp_key": "PMT-000015",
+      "crm_key": "PAY000015",
+      "exists_in_erp": true,
+      "exists_in_crm": true,
+      "expected_match": true,
+      "amount_drift": 0.0,
+      "has_amount_mismatch": false
+    },
+    {
+      "payment_id": "926ca444-e9db-4f57-8074-2ff71ae92d8b",
+      "erp_key": "PMT-000016",
+      "crm_key": "PAY000016",
+      "exists_in_erp": true,
+      "exists_in_crm": true,
+      "expected_match": true,
+      "amount_drift": 0.0,
+      "has_amount_mismatch": false
+    },
+    {
+      "payment_id": "615e433e-a87f-42eb-b964-5cc375e0282c",
+      "erp_key": "PMT-000017",
+      "crm_key": "PAY000017",
+      "exists_in_erp": true,
+      "exists_in_crm": true,
+      "expected_match": true,
+      "amount_drift": 0.0,
+      "has_amount_mismatch": false
+    }
+  ],
+  "summary": {
+    "total_invoices": 19,
+    "invoice_orphans": 0,
+    "total_payments": 17,
+    "payment_orphans": 1,
+    "payment_amount_mismatches": 0
+  }
+}
