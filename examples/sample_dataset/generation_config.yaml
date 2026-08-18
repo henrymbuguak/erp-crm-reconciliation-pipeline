@@ -1,0 +1,14 @@
+seed: 1
+num_customers: 8
+min_invoices_per_customer: 1
+max_invoices_per_customer: 5
+payment_coverage_ratio: 0.85
+output_dir: examples\sample_dataset
+with_ground_truth: true
+messiness:
+  missing_value_ratio: 0.05
+  bad_date_ratio: 0.08
+  encoding_issue_ratio: 0.03
+  duplicate_ratio: 0.02
+  orphan_ratio: 0.05
+  amount_drift_ratio: 0.04

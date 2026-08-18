@@ -1,0 +1,13 @@
+# Local uv index override (analogous to a `.env` file).
+#
+# Copy this file to `uv.toml` (untracked -- see .gitignore) if your network
+# blocks direct access to files.pythonhosted.org and requires routing package
+# downloads through an internal PyPI-compatible mirror/proxy.
+#
+# `uv.toml` is intentionally NOT committed: uv.lock is generated fresh in
+# each environment (including CI, which runs on standard public PyPI), so a
+# local-only mirror override never leaks into the shared, portable lock file.
+
+[[index]]
+url = "https://packagefeedproxy.microsoft.io/pypi/simple"
+default = true

@@ -1,0 +1,413 @@
+[
+  {
+    "customerId": "CUST-000001",
+    "customerName": "Dennis Boone",
+    "email": "dennis.boone@gmail.com",
+    "phone": "217-977-6317x066",
+    "createdAt": "2025-03-04",
+    "address": {
+      "street": "391 Johnson Burg Apt. 636",
+      "city": "New Jeffreymouth",
+      "region": "New York",
+      "postalCode": "72965",
+      "country": "Djibouti"
+    },
+    "invoices": [
+      {
+        "invoiceNumber": "INV000001",
+        "issueDate": "N/A",
+        "dueDate": "2025-10-09",
+        "currency": "USD",
+        "amount": 763.59,
+        "status": "overdue",
+        "payments": [
+          {
+            "paymentNumber": "PAY000001",
+            "paymentDate": "12 Sep 2025",
+            "amount": 763.59,
+            "method": "credit_card"
+          }
+        ]
+      },
+      {
+        "invoiceNumber": "INV000002",
+        "issueDate": "2024-12-23",
+        "dueDate": "2025-01-22",
+        "currency": "USD",
+        "amount": 2770.49,
+        "status": "paid",
+        "payments": []
+      },
+      {
+        "invoiceNumber": "INV000003",
+        "issueDate": "2025-12-21",
+        "dueDate": "TBD",
+        "currency": "USD",
+        "amount": 1550.81,
+        "status": "paid",
+        "payments": [
+          {
+            "paymentNumber": "PAY000003",
+            "paymentDate": "2025-12-26",
+            "amount": 1550.81,
+            "method": "--"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "customerId": "CUST-000002",
+    "customerName": "Michael Rhodes",
+    "email": "michael.rhodes@yahoo.com",
+    "phone": "606-681-2415x8683",
+    "createdAt": "2026-02-17",
+    "address": {
+      "street": "690 Sanchez Union Suite 625",
+      "city": "Christopherhaven",
+      "region": "Connecticut",
+      "postalCode": "21957",
+      "country": "Mali"
+    },
+    "invoices": [
+      {
+        "invoiceNumber": "INV000004",
+        "issueDate": "2025-08-17",
+        "dueDate": "2025-09-16",
+        "currency": "USD",
+        "amount": 3764.31,
+        "status": "paid",
+        "payments": [
+          {
+            "paymentNumber": "PAY000004",
+            "paymentDate": "0000-00-00",
+            "amount": 3764.31,
+            "method": "bank_transfer"
+          }
+        ]
+      },
+      {
+        "invoiceNumber": "INV000005",
+        "issueDate": "2026-06-12",
+        "dueDate": "2026-07-27",
+        "currency": "USD",
+        "amount": 2729.07,
+        "status": "",
+        "payments": [
+          {
+            "paymentNumber": "PAY000005",
+            "paymentDate": "2026-07-14",
+            "amount": 2729.07,
+            "method": "cash"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "customerId": "CUST-000003",
+    "customerName": "Mary Wood",
+    "email": "mary.wood@hotmail.com",
+    "phone": "4705499962",
+    "createdAt": "2024-01-07",
+    "address": {
+      "street": "88368 Farley Ports",
+      "city": "Stephenview",
+      "region": "Texas",
+      "postalCode": "72327",
+      "country": "New Caledonia"
+    },
+    "invoices": [
+      {
+        "invoiceNumber": "INV000006",
+        "issueDate": "2026-05-26",
+        "dueDate": "2026-06-25",
+        "currency": "USD",
+        "amount": 3894.58,
+        "status": "partial",
+        "payments": [
+          {
+            "paymentNumber": "PAY000006",
+            "paymentDate": "2026-06-29",
+            "amount": 3310.39,
+            "method": "credit_card"
+          }
+        ]
+      },
+      {
+        "invoiceNumber": "INV000007",
+        "issueDate": "2025-07-29",
+        "dueDate": "2025-09-27",
+        "currency": "USD",
+        "amount": 358.63,
+        "status": "partial",
+        "payments": []
+      }
+    ]
+  },
+  {
+    "customerId": "CUST-000004",
+    "customerName": "Susan Smith",
+    "email": "susan.smith@hotmail.com",
+    "phone": "928.783.6075x98386",
+    "createdAt": "2025/05/11",
+    "address": {
+      "street": "0889 Ellis Burgs Apt. 289",
+      "city": "Port Christopher",
+      "region": "Oklahoma",
+      "postalCode": "33962",
+      "country": "Antigua and Barbuda"
+    },
+    "invoices": [
+      {
+        "invoiceNumber": "INV000008",
+        "issueDate": "2025-12-10",
+        "dueDate": "2026-02-08",
+        "currency": "USD",
+        "amount": 2572.0,
+        "status": "paid",
+        "payments": [
+          {
+            "paymentNumber": "PAY000007",
+            "paymentDate": "2026-01-15",
+            "amount": 2572.0,
+            "method": "check"
+          }
+        ]
+      },
+      {
+        "invoiceNumber": "INV000009",
+        "issueDate": "2026-06-29",
+        "dueDate": "0000-00-00",
+        "currency": "USD",
+        "amount": 3946.13,
+        "status": "paid",
+        "payments": [
+          {
+            "paymentNumber": "PAY000008",
+            "paymentDate": "2026-07-05",
+            "amount": 3946.13,
+            "method": "bank_transfer"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "customerId": "CUST-000005",
+    "customerName": "Meagan Nunez",
+    "email": "meagan.nunez@gmail.com",
+    "phone": "7706434192",
+    "createdAt": "2024-01-11",
+    "address": {
+      "street": "24824 Gibson Islands",
+      "city": "Wellstown",
+      "region": "Maryland",
+      "postalCode": "51167",
+      "country": "Guam"
+    },
+    "invoices": [
+      {
+        "invoiceNumber": "INV000010",
+        "issueDate": "2024-12-03",
+        "dueDate": "2025-01-17",
+        "currency": "USD",
+        "amount": 4388.86,
+        "status": "paid",
+        "payments": [
+          {
+            "paymentNumber": "PAY000009",
+            "paymentDate": "2024-12-12",
+            "amount": 4388.86,
+            "method": "check"
+          }
+        ]
+      },
+      {
+        "invoiceNumber": "INV000011",
+        "issueDate": "2025-05-05",
+        "dueDate": "2025-06-04",
+        "currency": "USD",
+        "amount": 4186.07,
+        "status": "paid",
+        "payments": [
+          {
+            "paymentNumber": "PAY000010",
+            "paymentDate": "2025-05-05",
+            "amount": 4186.07,
+            "method": "bank_transfer"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "customerId": "CUST-000006",
+    "customerName": "Robert Lopez",
+    "email": "robert.lopez@gmail.com",
+    "phone": "983-896-0306x202",
+    "createdAt": "2025-08-03",
+    "address": {
+      "street": "873 Ralph Ports",
+      "city": "Donnachester",
+      "region": "Arkansas",
+      "postalCode": "97160",
+      "country": "French Southern Territories"
+    },
+    "invoices": [
+      {
+        "invoiceNumber": "INV000012",
+        "issueDate": "2024-09-05",
+        "dueDate": "2024-11-04",
+        "currency": "USD",
+        "amount": 795.1,
+        "status": "paid",
+        "payments": [
+          {
+            "paymentNumber": "PAY000011",
+            "paymentDate": "2024-10-18",
+            "amount": 795.1,
+            "method": "credit_card"
+          }
+        ]
+      },
+      {
+        "invoiceNumber": "INV000013",
+        "issueDate": "2024-11-07",
+        "dueDate": "2024-11-22",
+        "currency": "USD",
+        "amount": 3383.63,
+        "status": "overdue",
+        "payments": [
+          {
+            "paymentNumber": "PAY000012",
+            "paymentDate": "1733173200",
+            "amount": 3383.63,
+            "method": "bank_transfer"
+          }
+        ]
+      },
+      {
+        "invoiceNumber": "INV000014",
+        "issueDate": "2026-02-04",
+        "dueDate": "2026-02-19",
+        "currency": "USD",
+        "amount": 3854.16,
+        "status": "paid",
+        "payments": [
+          {
+            "paymentNumber": "PAY000013",
+            "paymentDate": "2026-03-06",
+            "amount": 3854.16,
+            "method": "credit_card"
+          }
+        ]
+      },
+      {
+        "invoiceNumber": "INV000015",
+        "issueDate": "2025-09-17",
+        "dueDate": "2025-10-02",
+        "currency": "USD",
+        "amount": 1906.98,
+        "status": "paid",
+        "payments": [
+          {
+            "paymentNumber": "PAY000014",
+            "paymentDate": "2025-09-24",
+            "amount": 1906.98,
+            "method": "credit_card"
+          }
+        ]
+      },
+      {
+        "invoiceNumber": "INV000016",
+        "issueDate": "1755464400",
+        "dueDate": "2025-09-02",
+        "currency": "USD",
+        "amount": 1349.35,
+        "status": "paid",
+        "payments": [
+          {
+            "paymentNumber": "PAY000015",
+            "paymentDate": "2025-09-11",
+            "amount": 1349.35,
+            "method": "NULL"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "customerId": "CUST-000007",
+    "customerName": "David Lewis",
+    "email": "david.lewis@gmail.com",
+    "phone": "511-944-2694x2080",
+    "createdAt": "2026-03-10",
+    "address": {
+      "street": "980 Gonzalez Courts",
+      "city": "New Emily",
+      "region": "Nevada",
+      "postalCode": "78018",
+      "country": "Congo"
+    },
+    "invoices": [
+      {
+        "invoiceNumber": "INV000017",
+        "issueDate": "2025-03-08",
+        "dueDate": "2025-04-22",
+        "currency": "USD",
+        "amount": 2184.57,
+        "status": "overdue",
+        "payments": [
+          {
+            "paymentNumber": "PAY000016",
+            "paymentDate": "2025-04-06",
+            "amount": 2184.57,
+            "method": "check"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "customerId": "CUST-000008",
+    "customerName": "Travis Hurley",
+    "email": "travis.hurley@yahoo.com",
+    "phone": "487-705-9640x2359",
+    "createdAt": "2025-05-17",
+    "address": {
+      "street": "41685 Tate Place Apt. 101",
+      "city": "East Garrett",
+      "region": "Ohio",
+      "postalCode": "28415",
+      "country": "Ethiopia"
+    },
+    "invoices": [
+      {
+        "invoiceNumber": "INV000018",
+        "issueDate": "2024-09-14",
+        "dueDate": "2024-10-29",
+        "currency": "USD",
+        "amount": 1021.67,
+        "status": "void",
+        "payments": []
+      },
+      {
+        "invoiceNumber": "INV000019",
+        "issueDate": "2024-11-02",
+        "dueDate": "",
+        "currency": "USD",
+        "amount": 3827.49,
+        "status": "partial",
+        "payments": [
+          {
+            "paymentNumber": "PAY000017",
+            "paymentDate": "2024-11-05",
+            "amount": 3444.74,
+            "method": "credit_card"
+          }
+        ]
+      }
+    ]
+  }
+]

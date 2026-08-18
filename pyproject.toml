@@ -1,0 +1,76 @@
+[project]
+name = "datagen"
+version = "0.1.0"
+description = "Synthetic ERP/CRM dataset generator for reconciliation pipeline testing"
+readme = "README.md"
+requires-python = ">=3.12"
+license = "MIT"
+dependencies = [
+    "faker>=40.36.0",
+    "mimesis>=21.0.0",
+    "pandas>=3.0.5",
+    "pydantic>=2.13.4",
+    "pyyaml>=6.0.3",
+    "rich>=15.0.0",
+    "typer>=0.12",
+]
+
+[project.scripts]
+datagen = "datagen.cli:app"
+
+[build-system]
+requires = ["uv_build>=0.11.29,<0.12.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "mypy>=2.3.0",
+    "pandas-stubs>=3.0.5.260730",
+    "pre-commit>=4.6.2",
+    "pytest>=9.1.1",
+    "pytest-cov>=7.1.0",
+    "ruff>=0.16.2",
+    "types-pyyaml>=6.0.12.20260724",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = [
+    "E", "F", "W",   # pycodestyle / pyflakes
+    "I",             # isort
+    "UP",            # pyupgrade
+    "B",             # bugbear
+    "C4",            # comprehensions
+    "SIM",           # simplify
+    "PTH",           # use pathlib
+    "RUF",           # ruff-specific
+]
+ignore = ["E501"]  # line length handled by formatter
+
+[tool.ruff.lint.isort]
+known-first-party = ["datagen"]
+
+[tool.ruff.format]
+quote-style = "double"
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+files = ["src", "tests"]
+plugins = ["pydantic.mypy"]
+
+[[tool.mypy.overrides]]
+module = ["mimesis.*", "faker.*"]
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--cov=datagen --cov-report=term-missing"
+
+[tool.coverage.run]
+source = ["src/datagen"]
+branch = true
