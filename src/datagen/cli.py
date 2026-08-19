@@ -92,7 +92,7 @@ def generate(
 ) -> None:
     """Generate a full synthetic ERP + CRM dataset (customers, invoices, payments).
 
-    Without ``--config``, generation uses :class:`~datagen.config.GenerationConfig`
+    Without ``--config``, generation uses `GenerationConfig`
     defaults. Any other flag that is explicitly passed always overrides the
     base config (whether that base came from defaults or ``--config``), so
     ``--config base.yaml --output-dir out2/`` behaves as expected.

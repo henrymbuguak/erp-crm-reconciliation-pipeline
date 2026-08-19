@@ -12,6 +12,10 @@ repos:
       - id: end-of-file-fixer
       - id: trailing-whitespace
       - id: check-yaml
+        # mkdocs.yml legitimately uses a `!!python/name:...` tag (standard
+        # mkdocs-material/pymdown-extensions config); --unsafe still checks
+        # syntax but permits custom tags instead of rejecting them outright.
+        args: [--unsafe]
       - id: check-toml
       - id: check-added-large-files
 

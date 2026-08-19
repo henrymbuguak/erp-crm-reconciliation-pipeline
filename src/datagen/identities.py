@@ -9,7 +9,7 @@ Structural discrepancies that a reconciliation pipeline must detect --
 records existing in only one system, or a payment amount that legitimately
 differs between systems -- are decided here, since they require knowledge of
 *both* systems at once. Cosmetic messiness is applied later, per system, in
-:mod:`datagen.messiness`.
+`datagen.messiness`.
 """
 
 from __future__ import annotations

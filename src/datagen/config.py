@@ -1,7 +1,7 @@
 """Configuration models for synthetic ERP/CRM data generation.
 
 All generation behavior (volume, RNG seed, and "messiness" ratios) is
-centralized here as a validated :mod:`pydantic` model so that a run is fully
+centralized here as a validated `pydantic` model so that a run is fully
 described by a single, serializable object. This makes datasets reproducible
 and lets configs be checked into version control (as YAML) for repeatable
 demos and tests.

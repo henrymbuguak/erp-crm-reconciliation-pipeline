@@ -1,6 +1,9 @@
 # erp-crm-reconciliation-pipeline
 
 [![CI](https://github.com/henrymbuguak/erp-crm-reconciliation-pipeline/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/henrymbuguak/erp-crm-reconciliation-pipeline/actions/workflows/ci.yml)
+[![Pages](https://github.com/henrymbuguak/erp-crm-reconciliation-pipeline/actions/workflows/pages.yml/badge.svg?branch=main)](https://github.com/henrymbuguak/erp-crm-reconciliation-pipeline/actions/workflows/pages.yml)
+
+📖 **[Read the full documentation](https://henrymbuguak.github.io/erp-crm-reconciliation-pipeline/)**
 
 Synthetic **ERP + CRM dataset generator** for building and testing a
 customer/invoice/payment reconciliation pipeline.
@@ -151,6 +154,19 @@ uv run pre-commit install  # run the above automatically on every commit
 ```
 
 CI (`.github/workflows/ci.yml`) runs the same checks on every push/PR.
+
+### Documentation site
+
+The full documentation (architecture diagrams, CLI reference, data model,
+and an auto-generated API reference) is built with
+[MkDocs Material](https://squidfunk.github.io/mkdocs-material/) and
+published to GitHub Pages by `.github/workflows/pages.yml` on every push to
+`main`. To preview it locally:
+
+```powershell
+uv sync --group docs
+uv run mkdocs serve   # http://127.0.0.1:8000
+```
 
 ### Local development network note
 

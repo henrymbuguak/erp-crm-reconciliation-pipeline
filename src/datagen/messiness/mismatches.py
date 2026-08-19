@@ -1,7 +1,7 @@
 """Apply structural cross-system mismatches at export time.
 
 Whether a payment amount should legitimately drift between ERP and CRM is
-decided during generation (see :mod:`datagen.generators.payments`); this
+decided during generation (see `datagen.generators.payments`); this
 module is where that decision is actually materialized into the ERP export's
 amount column, since the CRM export always shows the canonical/true amount.
 """
