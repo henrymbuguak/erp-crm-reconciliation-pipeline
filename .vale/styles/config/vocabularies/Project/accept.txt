@@ -25,3 +25,8 @@ worktrees?
 [Uu]psert(s|ed|ing)?
 dedupe
 nullable
+Postgres
+[Ii]dempoten(t|cy)
+psycopg
+JSONB
+DSN
