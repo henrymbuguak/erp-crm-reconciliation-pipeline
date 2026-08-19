@@ -52,6 +52,12 @@ def run(
     customer_threshold: Annotated[
         float, typer.Option(help="Confidence threshold for customer entity resolution.")
     ] = CUSTOMER_MATCH_THRESHOLD,
+    postgres_dsn: Annotated[
+        str | None,
+        typer.Option(
+            help="If set, also load the run into this Postgres DSN (see pipeline.postgres)."
+        ),
+    ] = None,
 ) -> None:
     """Run ingest -> dedupe -> clean -> resolve over DATA_DIR and write the crosswalk/report."""
     result = run_pipeline(data_dir, customer_match_threshold=customer_threshold)
@@ -69,6 +75,19 @@ def run(
     write_report(report, report_path)
 
     _print_summary(result, merged_crosswalk, report_path, crosswalk_path, quarantine_path)
+
+    if postgres_dsn is not None:
+        _load_postgres(result, postgres_dsn)
+
+
+def _load_postgres(result: PipelineResult, dsn: str) -> None:
+    import psycopg
+
+    from pipeline.postgres import load_pipeline_result
+
+    with psycopg.connect(dsn) as conn:
+        load_pipeline_result(conn, result)
+    console.print("Loaded run into [bold]Postgres[/bold]")
 
 
 def _print_summary(

@@ -86,11 +86,29 @@ uv run python -m eval.score data --threshold 0.75
 for the full flag list, and the [data model reference](reference/data-model.md#pipeline-data-model)
 for the pipeline's clean-record schemas, crosswalk, and quarantine format.
 
+## Load into Postgres (optional)
+
+The JSON crosswalk/quarantine log remain the source of truth `reconcile`
+reads back on every run; `--postgres-dsn` additionally loads the same run
+into a Postgres target schema (see [`pipeline.postgres`](reference/api.md#pipeline.postgres)):
+
+```bash
+docker compose up -d postgres
+uv run reconcile data --postgres-dsn postgresql://reconcile:reconcile@localhost:5433/reconcile
+```
+
+This creates the `customers` / `invoices` / `payments` / `crosswalk` /
+`quarantine_log` tables if they don't already exist and loads the run with
+the same idempotency semantics as the JSON files: `crosswalk` upserts
+without reassigning an existing `canonical_id`, and `quarantine_log` is
+replaced in full each run.
+
 ## Development
 
 ```bash
 uv sync --all-groups
-uv run pytest              # 107 tests, ~96% coverage (datagen + pipeline)
+uv run pytest              # 113 tests, ~95% coverage (datagen + pipeline);
+                            # Postgres tests skip unless TEST_DATABASE_URL is set
 uv run ruff check .        # lint
 uv run ruff format .       # format
 uv run mypy                # strict type checking

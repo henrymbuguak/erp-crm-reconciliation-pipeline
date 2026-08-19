@@ -225,8 +225,9 @@ src/pipeline/
     missing.py                  Per-field missing-value policy (quarantine vs. null)
   validate.py            Pydantic validation into Clean* models or a QuarantineEntry
   resolve.py             Entity resolution: customers (fuzzy), invoices/payments (exact + proximity)
-  crosswalk.py           Idempotent crosswalk persistence (JSON, pre-Postgres)
+  crosswalk.py           Idempotent crosswalk persistence (JSON, primary; upserted)
   quarantine.py          Quarantine log persistence (JSON)
+  postgres.py            Optional Postgres target schema, loaded via `reconcile --postgres-dsn`
   report.py              Markdown reconciliation report
   orchestrate.py         Shared ingest -> dedupe -> validate -> resolve sequence
   cli.py                 Typer CLI (`reconcile`)

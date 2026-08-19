@@ -90,10 +90,9 @@ flowchart LR
     Resolve --> Report["RECONCILIATION_REPORT.md"]:::done
     Crosswalk -.scores.-> Score
 
-    Crosswalk -.->|not yet built| Postgres[("Postgres target schema")]:::planned
+    Crosswalk --> Postgres[("Postgres target schema")]:::done
 
     classDef done fill:#26a69a,stroke:#00695c,color:#fff;
-    classDef planned fill:#eceff1,stroke:#607d8b,stroke-dasharray: 4 3,color:#37474f;
 ```
 
 Run both stages together:
@@ -133,8 +132,9 @@ src/pipeline/
     missing.py                  Per-field missing-value policy (quarantine vs. null)
   validate.py            Pydantic validation into Clean* models or a QuarantineEntry
   resolve.py             Entity resolution: customers (fuzzy), invoices/payments (exact + proximity)
-  crosswalk.py           Idempotent crosswalk persistence (JSON, pre-Postgres)
+  crosswalk.py           Idempotent crosswalk persistence (JSON, primary; upserted)
   quarantine.py          Quarantine log persistence (JSON)
+  postgres.py            Optional Postgres target schema, loaded via `reconcile --postgres-dsn`
   report.py              Markdown reconciliation report
   orchestrate.py         Shared ingest -> dedupe -> validate -> resolve sequence
   cli.py                 `reconcile` Typer CLI

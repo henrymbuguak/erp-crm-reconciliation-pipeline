@@ -8,6 +8,20 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: reconcile
+          POSTGRES_PASSWORD: reconcile
+          POSTGRES_DB: reconcile
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U reconcile"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 5
     steps:
       - uses: actions/checkout@v7
 
@@ -36,6 +50,8 @@ jobs:
         run: uv run mypy
 
       - name: Test (pytest)
+        env:
+          TEST_DATABASE_URL: postgresql://reconcile:reconcile@localhost:5432/reconcile
         run: uv run pytest
 
       - name: Smoke test CLI

@@ -117,3 +117,17 @@ unchanged input never duplicates a canonical entity -- see
 written to `data/processed/quarantine_log.json` by
 [`pipeline.quarantine`](api.md#pipeline.quarantine); an orphan is a valid
 outcome and is never quarantined.
+
+### Postgres target schema
+
+`reconcile run --postgres-dsn <dsn>` additionally loads the same run into a
+Postgres schema (see [`pipeline.postgres`](api.md#pipeline.postgres) and
+[`schema.sql`](https://github.com/henrymbuguak/erp-crm-reconciliation-pipeline/blob/main/src/pipeline/schema.sql)) --
+an additional persistence layer, not a replacement for the JSON files above,
+which remain the source of truth `reconcile` reads back on the next run.
+`customers` / `invoices` / `payments` are upserted on `(source_system,
+business_key)`; `crosswalk` mirrors the JSON file's reject-on-conflict
+upsert (a `canonical_id` is never reassigned), using Postgres 15's `UNIQUE
+NULLS NOT DISTINCT` so two NULLs in `erp_key`/`crm_key` compare equal, same
+as the JSON crosswalk's tuple-keyed semantics; `quarantine_log` is replaced
+in full each run, matching `quarantine_log.json`'s overwrite behavior.

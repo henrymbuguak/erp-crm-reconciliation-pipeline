@@ -84,6 +84,10 @@ Auto-generated from docstrings across the `datagen` and `pipeline` packages.
 
 ::: pipeline.quarantine
 
+## Postgres target schema
+
+::: pipeline.postgres
+
 ## Reconciliation report
 
 ::: pipeline.report

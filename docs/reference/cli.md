@@ -45,13 +45,14 @@ Markdown report.
 uv run reconcile data/raw
 ```
 
-| Option                  | Default                              | Meaning                                                            |
-| ----------------------- | ------------------------------------ | ------------------------------------------------------------------ |
-| `data_dir` (positional) | --                                   | Directory containing `erp/` (CSV) and `crm/` (JSON) subdirectories |
-| `--crosswalk-path`      | `data/processed/crosswalk.json`      | Upserted (never overwritten) crosswalk output                      |
-| `--quarantine-path`     | `data/processed/quarantine_log.json` | Quarantined-record log                                             |
-| `--report-path`         | `RECONCILIATION_REPORT.md`           | Markdown reconciliation report                                     |
-| `--customer-threshold`  | `resolve.CUSTOMER_MATCH_THRESHOLD`   | Confidence threshold for customer matching                         |
+| Option                  | Default                              | Meaning                                                                                                |
+| ----------------------- | ------------------------------------ | ------------------------------------------------------------------------------------------------------ |
+| `data_dir` (positional) | --                                   | Directory containing `erp/` (CSV) and `crm/` (JSON) subdirectories                                     |
+| `--crosswalk-path`      | `data/processed/crosswalk.json`      | Upserted (never overwritten) crosswalk output                                                          |
+| `--quarantine-path`     | `data/processed/quarantine_log.json` | Quarantined-record log                                                                                 |
+| `--report-path`         | `RECONCILIATION_REPORT.md`           | Markdown reconciliation report                                                                         |
+| `--customer-threshold`  | `resolve.CUSTOMER_MATCH_THRESHOLD`   | Confidence threshold for customer matching                                                             |
+| `--postgres-dsn`        | --                                   | If set, also load the run into this Postgres DSN (see [`pipeline.postgres`](api.md#pipeline.postgres)) |
 
 This CLI never reads `ground_truth.json`; precision/recall against ground
 truth is only ever computed by `eval/score.py`:
