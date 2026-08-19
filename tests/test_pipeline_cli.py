@@ -17,6 +17,7 @@ SAMPLE_DATASET = Path(__file__).parent.parent / "examples" / "sample_dataset"
 def test_run_writes_crosswalk_quarantine_and_report(tmp_path: Path) -> None:
     crosswalk_path = tmp_path / "crosswalk.json"
     quarantine_path = tmp_path / "quarantine_log.json"
+    duplicate_log_path = tmp_path / "duplicate_log.json"
     report_path = tmp_path / "RECONCILIATION_REPORT.md"
 
     result = runner.invoke(
@@ -27,6 +28,8 @@ def test_run_writes_crosswalk_quarantine_and_report(tmp_path: Path) -> None:
             str(crosswalk_path),
             "--quarantine-path",
             str(quarantine_path),
+            "--duplicate-log-path",
+            str(duplicate_log_path),
             "--report-path",
             str(report_path),
         ],
@@ -35,6 +38,7 @@ def test_run_writes_crosswalk_quarantine_and_report(tmp_path: Path) -> None:
     assert result.exit_code == 0, result.stdout
     assert crosswalk_path.exists()
     assert quarantine_path.exists()
+    assert duplicate_log_path.exists()
     assert report_path.exists()
 
     crosswalk = json.loads(crosswalk_path.read_text(encoding="utf-8"))
@@ -42,6 +46,7 @@ def test_run_writes_crosswalk_quarantine_and_report(tmp_path: Path) -> None:
 
     report = report_path.read_text(encoding="utf-8")
     assert "# Reconciliation Report" in report
+    assert "Intra-system duplicates collapsed" in report
     # This CLI never reads ground_truth.json, so precision/recall is never in its report.
     assert "Precision / recall" not in report
 
@@ -49,6 +54,7 @@ def test_run_writes_crosswalk_quarantine_and_report(tmp_path: Path) -> None:
 def test_run_upserts_into_existing_crosswalk(tmp_path: Path) -> None:
     crosswalk_path = tmp_path / "crosswalk.json"
     quarantine_path = tmp_path / "quarantine_log.json"
+    duplicate_log_path = tmp_path / "duplicate_log.json"
     report_path = tmp_path / "RECONCILIATION_REPORT.md"
 
     args = [
@@ -57,6 +63,8 @@ def test_run_upserts_into_existing_crosswalk(tmp_path: Path) -> None:
         str(crosswalk_path),
         "--quarantine-path",
         str(quarantine_path),
+        "--duplicate-log-path",
+        str(duplicate_log_path),
         "--report-path",
         str(report_path),
     ]

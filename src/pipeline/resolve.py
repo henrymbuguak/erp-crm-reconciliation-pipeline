@@ -42,11 +42,14 @@ agreement to avoid many-to-one collisions:
 - **Invalid** -- handled upstream by `validate.py`; this module never sees
   those records.
 
-The customer fuzzy-match confidence threshold below is a provisional
-default. Per CLAUDE.md, it should be calibrated offline by sweeping values
-against `eval/score.py` output on a `--with-ground-truth` dataset and
-hardcoding the value that maximizes F1 -- that script doesn't exist yet
-(a later phase), so this constant should be revisited once it does.
+The customer fuzzy-match confidence threshold below was calibrated per
+CLAUDE.md by sweeping `eval/score.py data/raw --threshold <value>` (500
+customers, `--with-ground-truth`) from 0.1 to 1.0 in increments of 0.05:
+combined invoice+payment F1 is flat at its maximum (86.6%) across the
+entire 0.1-0.95 range and only drops (to 85.4%) at 0.99-1.0, where an
+exact-match-only gate starts rejecting genuine matches with a merely
+near-identical name. 0.75 sits well inside that plateau, away from that
+edge.
 """
 
 from __future__ import annotations
@@ -81,8 +84,7 @@ _NAME_WEIGHT = 0.8
 _EMAIL_WEIGHT = 0.15
 _PHONE_WEIGHT = 0.05
 
-# Provisional pending offline calibration against eval/score.py (see module
-# docstring) -- not yet a tuned constant.
+# Calibrated against eval/score.py -- see module docstring for the sweep.
 CUSTOMER_MATCH_THRESHOLD = 0.75
 
 

@@ -10,6 +10,7 @@ from uuid import uuid4
 from pipeline.models import (
     CleanPayment,
     CrosswalkEntry,
+    DuplicateMergeLog,
     EntityType,
     QuarantineEntry,
     ReasonCode,
@@ -109,6 +110,25 @@ def test_render_report_omits_precision_recall_when_not_provided() -> None:
     report = render_report(_ingest_counts(), [], [], [], [])
 
     assert "Precision" not in report
+
+
+def test_render_report_includes_duplicates_section() -> None:
+    duplicate_logs = [
+        DuplicateMergeLog(
+            key_column="CUST_ID", key_value="C000001", row_count=2, differing_columns=["CITY"]
+        )
+    ]
+
+    report = render_report(_ingest_counts(), [], [], [], [], duplicate_logs=duplicate_logs)
+
+    assert "Duplicate groups collapsed: 1" in report
+    assert "CUST_ID | C000001 | 2 | CITY" in report
+
+
+def test_render_report_shows_none_when_no_duplicates_collapsed() -> None:
+    report = render_report(_ingest_counts(), [], [], [], [])
+
+    assert "Duplicate groups collapsed: 0" in report
 
 
 def test_render_report_includes_precision_recall_when_provided() -> None:

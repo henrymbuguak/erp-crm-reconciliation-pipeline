@@ -16,6 +16,7 @@ from rich.console import Console
 from rich.table import Table
 
 from pipeline.crosswalk import upsert_crosswalk
+from pipeline.duplicate_log import write_duplicate_log
 from pipeline.models import CrosswalkEntry, EntityType
 from pipeline.orchestrate import PipelineResult, run_pipeline
 from pipeline.quarantine import write_quarantine_log
@@ -46,6 +47,9 @@ def run(
     quarantine_path: Annotated[
         Path, typer.Option(help="Where to write the quarantine log JSON.")
     ] = Path("data/processed/quarantine_log.json"),
+    duplicate_log_path: Annotated[
+        Path, typer.Option(help="Where to write the intra-system duplicate-merge log JSON.")
+    ] = Path("data/processed/duplicate_log.json"),
     report_path: Annotated[
         Path, typer.Option(help="Where to write the Markdown reconciliation report.")
     ] = Path("RECONCILIATION_REPORT.md"),
@@ -64,6 +68,7 @@ def run(
 
     merged_crosswalk = upsert_crosswalk(result.crosswalk, crosswalk_path)
     write_quarantine_log(result.quarantine, quarantine_path)
+    write_duplicate_log(result.duplicate_logs, duplicate_log_path)
 
     report = render_report(
         ingest_counts=result.ingest_counts,
@@ -71,10 +76,13 @@ def run(
         quarantine=result.quarantine,
         erp_payments=result.erp_payments,
         crm_payments=result.crm_payments,
+        duplicate_logs=result.duplicate_logs,
     )
     write_report(report, report_path)
 
-    _print_summary(result, merged_crosswalk, report_path, crosswalk_path, quarantine_path)
+    _print_summary(
+        result, merged_crosswalk, report_path, crosswalk_path, quarantine_path, duplicate_log_path
+    )
 
     if postgres_dsn is not None:
         _load_postgres(result, postgres_dsn)
@@ -96,6 +104,7 @@ def _print_summary(
     report_path: Path,
     crosswalk_path: Path,
     quarantine_path: Path,
+    duplicate_log_path: Path,
 ) -> None:
     table = Table(title="Match rate by entity type")
     table.add_column("Entity")
@@ -115,6 +124,10 @@ def _print_summary(
         f"Crosswalk written to [bold]{crosswalk_path}[/bold] ({len(merged_crosswalk)} total entries)"
     )
     console.print(f"Quarantine log written to [bold]{quarantine_path}[/bold]")
+    console.print(
+        f"Duplicate-merge log written to [bold]{duplicate_log_path}[/bold] "
+        f"({len(result.duplicate_logs)} groups collapsed)"
+    )
 
 
 if __name__ == "__main__":

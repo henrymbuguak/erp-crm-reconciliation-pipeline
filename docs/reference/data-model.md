@@ -116,7 +116,11 @@ unchanged input never duplicates a canonical entity -- see
 [`pipeline.crosswalk`](api.md#pipeline.crosswalk). Every quarantined row is
 written to `data/processed/quarantine_log.json` by
 [`pipeline.quarantine`](api.md#pipeline.quarantine); an orphan is a valid
-outcome and is never quarantined.
+outcome and is never quarantined. Every intra-system near-duplicate cluster
+collapsed during cleaning (see "Intra-system near-duplicates" above) is
+written to `data/processed/duplicate_log.json` by
+[`pipeline.duplicate_log`](api.md#pipeline.duplicate_log), replaced in full
+each run like the quarantine log.
 
 ### Postgres target schema
 

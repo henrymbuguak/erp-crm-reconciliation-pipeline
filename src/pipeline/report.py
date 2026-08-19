@@ -14,7 +14,14 @@ from dataclasses import dataclass
 from decimal import Decimal
 from pathlib import Path
 
-from pipeline.models import CleanPayment, CrosswalkEntry, EntityType, QuarantineEntry, ReasonCode
+from pipeline.models import (
+    CleanPayment,
+    CrosswalkEntry,
+    DuplicateMergeLog,
+    EntityType,
+    QuarantineEntry,
+    ReasonCode,
+)
 
 # Genuine payment drift is always >= $0.01 in magnitude (erp_amount_drift is
 # drawn from uniform(0.01, 5.0)); this is a rounding-noise epsilon, not a gate.
@@ -164,6 +171,24 @@ def _render_drift_section(drifts: list[PaymentDrift]) -> str:
     return "\n".join(lines) + "\n"
 
 
+def _render_duplicates_section(duplicate_logs: list[DuplicateMergeLog], sample_size: int) -> str:
+    lines = [
+        "## Intra-system duplicates collapsed\n",
+        f"Duplicate groups collapsed: {len(duplicate_logs)}\n",
+    ]
+    if not duplicate_logs:
+        lines.append("_none_\n")
+        return "\n".join(lines)
+    lines.append("| Key column | Key value | Rows merged | Differing columns |")
+    lines.append("| --- | --- | --- | --- |")
+    for log in duplicate_logs[:sample_size]:
+        differing = ", ".join(log.differing_columns) or "_none_"
+        lines.append(f"| {log.key_column} | {log.key_value} | {log.row_count} | {differing} |")
+    if len(duplicate_logs) > sample_size:
+        lines.append(f"\n...and {len(duplicate_logs) - sample_size} more\n")
+    return "\n".join(lines) + "\n"
+
+
 def _render_precision_recall_section(precision_recall: PrecisionRecall | None) -> str:
     if precision_recall is None:
         return ""
@@ -181,6 +206,7 @@ def render_report(
     quarantine: list[QuarantineEntry],
     erp_payments: list[CleanPayment],
     crm_payments: list[CleanPayment],
+    duplicate_logs: list[DuplicateMergeLog] | None = None,
     precision_recall: PrecisionRecall | None = None,
     sample_size: int = 5,
 ) -> str:
@@ -192,6 +218,7 @@ def render_report(
         _render_quarantine_section(quarantine),
         _render_orphan_section(crosswalk, sample_size),
         _render_drift_section(drifts),
+        _render_duplicates_section(duplicate_logs or [], sample_size),
         _render_precision_recall_section(precision_recall),
     ]
     return "\n".join(section for section in sections if section)
