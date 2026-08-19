@@ -12,21 +12,23 @@ reconcile them back into a single source of truth.
 - Two deliberately divergent exports of the same underlying data: an ERP-style flat CSV using legacy field names, and a CRM-style nested JSON using camelCase field names -- mirroring how a real SAP/Salesforce-style hybrid legacy stack disagrees with itself.
 - Composable "messy data" injection: inconsistent/invalid date formats, mixed-encoding corruption, missing values, and near-duplicate rows, applied independently per export.
 - Genuine cross-system discrepancies -- orphan records and legitimate ERP/CRM amount drift -- with an optional `ground_truth.json` answer key for scoring a downstream reconciliation pipeline's precision/recall.
-- A [Typer](https://typer.tiangolo.com/) CLI, a `pydantic`-validated, YAML-round-trippable configuration model, and a fully typed (`mypy --strict`) codebase with ~95% test coverage.
+- A reconciliation pipeline (`Polars` + `Pydantic`) that ingests both exports, cleans and validates every row, resolves ERP records against CRM records by name/email/phone/date/amount proximity (never by business-key format), and produces a crosswalk plus a Markdown reconciliation report.
+- A [Typer](https://typer.tiangolo.com/) CLI for both stages (`datagen generate` and `reconcile`), `pydantic`-validated configuration and data models, and a fully typed (`mypy --strict`) codebase with high test coverage.
 
 ## Choose a path
 
-| Goal                                   | Start here                                                                          |
-| --------------------------------------- | ------------------------------------------------------------------------------------ |
-| Generate a dataset and inspect the CLI | [Get started](getting-started.md)                                                     |
-| Understand how the pieces fit together | [Architecture](architecture.md)                                                      |
-| Look up CLI flags or the data schema   | [Reference](reference/cli.md)                                                        |
-| Inspect the implementation             | [Repository on GitHub](https://github.com/henrymbuguak/erp-crm-reconciliation-pipeline) |
+| Goal                                                     | Start here                                                                              |
+| -------------------------------------------------------- | --------------------------------------------------------------------------------------- |
+| Generate a dataset and inspect the CLI                   | [Get started](getting-started.md)                                                       |
+| Run the reconciliation pipeline over a generated dataset | [Get started](getting-started.md#reconcile-the-data)                                    |
+| Understand how the pieces fit together                   | [Architecture](architecture.md)                                                         |
+| Look up CLI flags or the data schema                     | [Reference](reference/cli.md)                                                           |
+| Inspect the implementation                               | [Repository on GitHub](https://github.com/henrymbuguak/erp-crm-reconciliation-pipeline) |
 
-!!! note "Part of a larger project"
-    Dataset generation is the foundation for a broader **Legacy ERP/CRM
-    Integration and Data Cleaning Pipeline**: an ingestion and cleaning engine
-    (Polars + Pydantic), a quarantine system for invalid rows, entity
-    resolution between the ERP and CRM record sets, and a stakeholder-facing
-    reconciliation report. Those pieces build directly on the datasets and
-    ground-truth mapping generated here.
+!!! note "Two steps, one pipeline"
+This project has two parts, run in order. Step one, `datagen`, generates
+the messy ERP/CRM exports (and optionally `ground_truth.json`). Step
+two, `reconcile`, ingests those exports, cleans and validates them,
+resolves ERP records against CRM records, and writes a crosswalk and
+reconciliation report. See [Architecture](architecture.md) for how the
+two fit together.

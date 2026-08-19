@@ -54,11 +54,43 @@ See [`examples/sample_dataset`](https://github.com/henrymbuguak/erp-crm-reconcil
 in the repository for a small, committed dataset (8 customers, `--seed 1`)
 you can inspect without running anything.
 
+## Reconcile the data
+
+Once you have a generated dataset, run the reconciliation pipeline over it:
+
+```bash
+uv run reconcile data
+```
+
+This ingests `data/erp/*.csv` and `data/crm/customers.json`, cleans and
+validates every row, resolves ERP records against CRM records, and writes:
+
+```text
+data/processed/crosswalk.json        # upserted on every run, never overwritten
+data/processed/quarantine_log.json   # every row that failed cleaning/validation, or tied on resolution
+RECONCILIATION_REPORT.md             # match rate, quarantine breakdown, orphans, payment drift
+```
+
+Re-running `reconcile` on the same input is idempotent: existing crosswalk
+entries are kept and only genuinely new ones are appended.
+
+If you generated the dataset `--with-ground-truth`, score the pipeline's
+matcher against it (precision/recall/F1) with:
+
+```bash
+uv run python -m eval.score data --threshold 0.75
+```
+
+`eval/score.py` is the only place `ground_truth.json` is ever read --
+`reconcile` itself never consults it. See the [CLI reference](reference/cli.md#reconcile)
+for the full flag list, and the [data model reference](reference/data-model.md#pipeline-data-model)
+for the pipeline's clean-record schemas, crosswalk, and quarantine format.
+
 ## Development
 
 ```bash
 uv sync --all-groups
-uv run pytest              # test suite, ~95% coverage
+uv run pytest              # 107 tests, ~96% coverage (datagen + pipeline)
 uv run ruff check .        # lint
 uv run ruff format .       # format
 uv run mypy                # strict type checking

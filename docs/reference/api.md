@@ -1,6 +1,6 @@
 # API reference
 
-Auto-generated from docstrings across the `datagen` package.
+Auto-generated from docstrings across the `datagen` and `pipeline` packages.
 
 ## Configuration
 
@@ -46,6 +46,56 @@ Auto-generated from docstrings across the `datagen` package.
 
 ::: datagen.ground_truth
 
-## CLI
+## `datagen` CLI
 
 ::: datagen.cli
+
+## Pipeline models
+
+::: pipeline.models
+
+## Ingestion
+
+::: pipeline.ingest
+
+## Cleaners
+
+::: pipeline.cleaners.duplicates
+
+::: pipeline.cleaners.missing
+
+::: pipeline.cleaners.dates
+
+::: pipeline.cleaners.encoding
+
+## Schema validation
+
+::: pipeline.validate
+
+## Entity resolution
+
+::: pipeline.resolve
+
+## Crosswalk persistence
+
+::: pipeline.crosswalk
+
+## Quarantine log
+
+::: pipeline.quarantine
+
+## Reconciliation report
+
+::: pipeline.report
+
+## Orchestration
+
+::: pipeline.orchestrate
+
+## `reconcile` CLI
+
+::: pipeline.cli
+
+## Evaluation against ground truth
+
+::: eval.score

@@ -5,12 +5,13 @@
 
 📖 **[Read the full documentation](https://henrymbuguak.github.io/erp-crm-reconciliation-pipeline/)**
 
-Synthetic **Enterprise Resource Planning (ERP) and Customer Relationship
-Management (CRM) dataset generator** for building and testing a
-customer/invoice/payment reconciliation pipeline.
+A two-part project for testing legacy data migrations: a synthetic
+**Enterprise Resource Planning (ERP) and Customer Relationship Management
+(CRM) dataset generator**, and a **reconciliation pipeline** that ingests,
+cleans, and matches the two systems' records back together.
 
-The `datagen` command-line tool produces two deliberately divergent exports
-of the *same* underlying business data: an ERP-style flat CSV export and a
+**Step 1 -- `datagen`:** produces two deliberately divergent exports of the
+_same_ underlying business data: an ERP-style flat CSV export and a
 CRM-style nested JSON export, complete with realistic "messy data" defects
 (bad date formats, missing values, mixed encodings, duplicate rows) and
 genuine cross-system discrepancies -- records existing in only one system,
@@ -20,19 +21,25 @@ which records should reconcile, so you can score a reconciliation
 pipeline's output for precision and recall against a known-correct answer
 key.
 
+**Step 2 -- `pipeline` (the `reconcile` CLI):** ingests both exports with
+Polars, repairs recoverable messiness, validates every row against Pydantic
+schemas, resolves ERP records against CRM records (by name/email/phone and
+date/amount proximity -- never by business-key format), and writes a
+crosswalk plus a Markdown reconciliation report.
+
 ## Why two divergent exports instead of one clean dataset?
 
 A reconciliation pipeline is only as good as the messy data it's tested
 against. Real ERP and CRM systems almost never agree on field names, ID
 formats, or even which records exist -- that's exactly the kind of
-divergence this tool reproduces on purpose:
+divergence `datagen` reproduces on purpose:
 
-| | ERP export | CRM export |
-|---|---|---|
-| Format | Flat CSV (`erp/customers.csv`, `erp/invoices.csv`, `erp/payments.csv`) | Nested JSON (`crm/customers.json`) |
-| Field naming | Legacy `UPPER_SNAKE_CASE` (`CUST_ID`, `INV_NO`) | `camelCase` (`customerId`, `invoiceNumber`) |
-| Business keys | `C000001`, `INV-000001`, `PMT-000001` | `CUST-000001`, `INV000001`, `PAY000001` |
-| Structure | One row per invoice/payment | Invoices nest under customers, and payments nest under invoices |
+|               | ERP export                                                             | CRM export                                                      |
+| ------------- | ---------------------------------------------------------------------- | --------------------------------------------------------------- |
+| Format        | Flat CSV (`erp/customers.csv`, `erp/invoices.csv`, `erp/payments.csv`) | Nested JSON (`crm/customers.json`)                              |
+| Field naming  | Legacy `UPPER_SNAKE_CASE` (`CUST_ID`, `INV_NO`)                        | `camelCase` (`customerId`, `invoiceNumber`)                     |
+| Business keys | `C000001`, `INV-000001`, `PMT-000001`                                  | `CUST-000001`, `INV000001`, `PAY000001`                         |
+| Structure     | One row per invoice/payment                                            | Invoices nest under customers, and payments nest under invoices |
 
 Both exports are projections of the same internal, seeded "ground truth"
 entities (see [`src/datagen/identities.py`](src/datagen/identities.py)), so a
@@ -47,9 +54,10 @@ environment management.
 ```powershell
 uv sync
 uv run datagen generate --seed 42 --customers 200 --with-ground-truth --output-dir data
+uv run reconcile data
 ```
 
-This writes:
+The first command writes:
 
 ```
 data/
@@ -64,27 +72,54 @@ data/
 Re-running with the same `--seed` and other options always reproduces
 byte-identical output.
 
+The second command ingests that data and writes:
+
+```
+data/processed/crosswalk.json        # upserted on every run, never overwritten
+data/processed/quarantine_log.json   # every row that failed cleaning/validation, or tied on resolution
+RECONCILIATION_REPORT.md             # match rate, quarantine breakdown, orphans, payment drift
+```
+
+If you generated the dataset `--with-ground-truth`, score the pipeline's
+matcher against it (`reconcile` itself never reads `ground_truth.json` --
+see [Hard constraints](#hard-constraints) below):
+
+```powershell
+uv run python -m eval.score data --threshold 0.75
+```
+
 ### CLI reference
 
 ```powershell
 uv run datagen --help
 uv run datagen generate --help
 uv run datagen show-config          # print the fully-resolved config as YAML
+uv run reconcile --help
 ```
 
-Key options on `generate` (all are overrides layered on top of `--config`,
-if given, or on top of defaults otherwise):
+Key options on `datagen generate` (all are overrides layered on top of
+`--config`, if given, or on top of defaults otherwise):
 
-| Option | Default | Meaning |
-|---|---|---|
-| `--seed` | 42 | Master RNG seed -- the same seed always produces the same dataset |
-| `--customers` | 200 | Number of customers to generate |
-| `--min-invoices` / `--max-invoices` | 1 / 5 | Invoices generated per customer |
-| `--payment-coverage` | 0.85 | Fraction of eligible invoices that receive a payment |
-| `--output-dir` | `data` | Where to write the export |
-| `--config` | -- | Base config YAML, described below -- other flags still override it |
-| `--with-ground-truth` / `--no-ground-truth` | off | Emit `ground_truth.json` |
-| `--missing-value-ratio`, `--bad-date-ratio`, `--encoding-issue-ratio`, `--duplicate-ratio`, `--orphan-ratio`, `--amount-drift-ratio` | see below | Messiness knobs (0.0-1.0) |
+| Option                                                                                                                               | Default   | Meaning                                                            |
+| ------------------------------------------------------------------------------------------------------------------------------------ | --------- | ------------------------------------------------------------------ |
+| `--seed`                                                                                                                             | 42        | Master RNG seed -- the same seed always produces the same dataset  |
+| `--customers`                                                                                                                        | 200       | Number of customers to generate                                    |
+| `--min-invoices` / `--max-invoices`                                                                                                  | 1 / 5     | Invoices generated per customer                                    |
+| `--payment-coverage`                                                                                                                 | 0.85      | Fraction of eligible invoices that receive a payment               |
+| `--output-dir`                                                                                                                       | `data`    | Where to write the export                                          |
+| `--config`                                                                                                                           | --        | Base config YAML, described below -- other flags still override it |
+| `--with-ground-truth` / `--no-ground-truth`                                                                                          | off       | Emit `ground_truth.json`                                           |
+| `--missing-value-ratio`, `--bad-date-ratio`, `--encoding-issue-ratio`, `--duplicate-ratio`, `--orphan-ratio`, `--amount-drift-ratio` | see below | Messiness knobs (0.0-1.0)                                          |
+
+Key options on `reconcile`:
+
+| Option                  | Default                              | Meaning                                                            |
+| ----------------------- | ------------------------------------ | ------------------------------------------------------------------ |
+| `data_dir` (positional) | --                                   | Directory containing `erp/` (CSV) and `crm/` (JSON) subdirectories |
+| `--crosswalk-path`      | `data/processed/crosswalk.json`      | Upserted (never overwritten) crosswalk output                      |
+| `--quarantine-path`     | `data/processed/quarantine_log.json` | Quarantined-record log                                             |
+| `--report-path`         | `RECONCILIATION_REPORT.md`           | Markdown reconciliation report                                     |
+| `--customer-threshold`  | 0.75                                 | Confidence threshold for customer entity resolution                |
 
 ### Using a config file
 
@@ -105,6 +140,27 @@ anything. The following command created it:
 ```powershell
 uv run datagen generate --seed 1 --customers 8 --with-ground-truth --output-dir examples/sample_dataset
 ```
+
+## Hard constraints
+
+These rules (from `CLAUDE.md`, which governs the pipeline) shape the
+implementation and are worth knowing before reading the code:
+
+- **No ID-format shortcuts.** `CUST_ID` and `customerId` are cosmetically
+  different encodings of the same sequence number only because this is a
+  synthetic dataset. Entity resolution never parses, strips, or reverses
+  business-key formats to align records across systems -- it matches on
+  name/email/phone (customers) and date/amount proximity within an
+  already-resolved parent (invoices, payments), the same signals a real
+  migration would have.
+- **`ground_truth.json` is eval-only.** It is never imported, read, or
+  referenced by any module under `src/pipeline/`. Only `eval/score.py` (or
+  tests) may read it -- see [`eval/score.py`](eval/score.py).
+- **Zero silent failures.** Every row that fails cleaning/validation, or
+  ties on entity resolution, is written to `quarantine_log.json` with a
+  reason code -- never silently dropped. A genuine orphan (a record with no
+  counterpart in the other system) is a valid outcome, not a failure, and
+  is never quarantined.
 
 ## Architecture
 
@@ -128,28 +184,51 @@ src/datagen/
     erp_csv.py             Flat CSV, legacy field names
     crm_json.py              Nested JSON, camelCase field names
   ground_truth.py       Reconciliation answer-key mapping (JSON)
-  cli.py                Typer CLI
+  cli.py                Typer CLI (`datagen`)
+
+src/pipeline/
+  models.py             CleanCustomer/Invoice/Payment, QuarantineEntry, CrosswalkEntry, ReasonCode
+  ingest.py              Reads raw ERP CSV / CRM JSON into polars DataFrames
+  cleaners/
+    duplicates.py          Collapses intra-system near-duplicate rows
+    dates.py                 Parses every known date format the generator can produce
+    encoding.py                Repairs mojibake back to UTF-8
+    missing.py                  Per-field missing-value policy (quarantine vs. null)
+  validate.py            Pydantic validation into Clean* models or a QuarantineEntry
+  resolve.py             Entity resolution: customers (fuzzy), invoices/payments (exact + proximity)
+  crosswalk.py           Idempotent crosswalk persistence (JSON, pre-Postgres)
+  quarantine.py          Quarantine log persistence (JSON)
+  report.py              Markdown reconciliation report
+  orchestrate.py         Shared ingest -> dedupe -> validate -> resolve sequence
+  cli.py                 Typer CLI (`reconcile`)
+
+eval/
+  score.py               The only module allowed to read ground_truth.json --
+                          precision/recall/F1, never consulted at runtime by src/pipeline/
 ```
 
-**Design principle:** the generators decide structural cross-system
-discrepancies once -- for example, a record existing in only one system, or
-a payment amount that legitimately differs between systems -- because that
-decision requires knowledge of both systems at once. The `messiness/`
-package then applies cosmetic messiness (bad date formats, missing values,
-encoding issues, duplicate rows) independently per export, so the ERP and
-CRM copies of the same data diverge realistically instead of matching each
-other's corruption exactly.
+**Design principle (datagen):** the generators decide structural
+cross-system discrepancies once -- for example, a record existing in only
+one system, or a payment amount that legitimately differs between systems
+-- because that decision requires knowledge of both systems at once. The
+`messiness/` package then applies cosmetic messiness (bad date formats,
+missing values, encoding issues, duplicate rows) independently per export,
+so the ERP and CRM copies of the same data diverge realistically instead of
+matching each other's corruption exactly.
 
 All randomness -- including internal correlation UUIDs -- derives from a
 single master seed via
 [`numpy.random.SeedSequence.spawn`](src/datagen/rng.py), so reproducibility
 doesn't depend on any OS-level randomness.
 
+See [Architecture](https://henrymbuguak.github.io/erp-crm-reconciliation-pipeline/architecture/)
+in the full documentation for module-level diagrams of both stages.
+
 ## Development
 
 ```powershell
 uv sync --all-groups
-uv run pytest              # 43 tests, ~95% coverage
+uv run pytest              # 107 tests, ~96% coverage (datagen + pipeline)
 uv run ruff check .        # lint
 uv run ruff format .       # format
 uv run mypy                # strict type checking
