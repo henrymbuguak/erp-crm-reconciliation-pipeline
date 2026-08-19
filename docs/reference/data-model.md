@@ -8,14 +8,14 @@ The ERP and CRM exports are both projections of the same internal
 [`src/datagen/identities.py`](https://github.com/henrymbuguak/erp-crm-reconciliation-pipeline/blob/main/src/datagen/identities.py)
 for the full field list.
 
-## Field mapping: ERP vs. CRM
+## ERP and CRM field mapping
 
 ### Customers
 
 | Canonical field | ERP CSV column | CRM JSON field |
 | --- | --- | --- |
 | `customer_id` (internal only) | -- | -- |
-| business key | `CUST_ID` (e.g. `C000001`) | `customerId` (e.g. `CUST-000001`) |
+| business key | `CUST_ID`, for example `C000001` | `customerId`, for example `CUST-000001` |
 | `full_name` | `CUST_NAME` | `customerName` |
 | `email` | `EMAIL_ADDR` | `email` |
 | `phone` | `PHONE_NUM` | `phone` |
@@ -30,7 +30,7 @@ for the full field list.
 
 | Canonical field | ERP CSV column | CRM JSON field |
 | --- | --- | --- |
-| business key | `INV_NO` (e.g. `INV-000001`) | `invoiceNumber` (e.g. `INV000001`), nested under the owning customer |
+| business key | `INV_NO`, for example `INV-000001` | `invoiceNumber`, for example `INV000001`, nested under the owning customer |
 | `issue_date` | `ISSUE_DT` | `issueDate` |
 | `due_date` | `DUE_DT` | `dueDate` |
 | `currency` | `CURR_CD` | `currency` |
@@ -42,7 +42,7 @@ for the full field list.
 
 | Canonical field | ERP CSV column | CRM JSON field |
 | --- | --- | --- |
-| business key | `PMT_NO` (e.g. `PMT-000001`) | `paymentNumber` (e.g. `PAY000001`), nested under the owning invoice |
+| business key | `PMT_NO`, for example `PMT-000001` | `paymentNumber`, for example `PAY000001`, nested under the owning invoice |
 | `payment_date` | `PMT_DT` | `paymentDate` |
 | `amount` | `AMT` (`amount + erp_amount_drift`) | `amount` (canonical amount, undrifted) |
 | `method` | `PMT_METHOD_CD` (upper-cased) | `method` |
@@ -54,11 +54,11 @@ silently average away.
 
 ## Messiness knobs
 
-All ratios are 0.0-1.0 and are applied independently, per export, with
-independently-seeded RNG streams (see
+Each ratio (0.0-1.0) applies independently, per export, with
+independently seeded RNG streams (see
 [`datagen.rng.spawn_rngs`](api.md#datagen.rng)) -- so the ERP and CRM copies
-of the same underlying row diverge realistically instead of being corrupted
-identically.
+of the same underlying row diverge realistically instead of matching each
+other's corruption exactly.
 
 | Knob | Module | Effect |
 | --- | --- | --- |
@@ -75,5 +75,5 @@ With `--with-ground-truth`, `ground_truth.json` records, for every invoice
 and payment: whether it exists in ERP, CRM, or both (`expected_match`), its
 business key in each system (or `null` if absent), and -- for payments --
 the exact `amount_drift` applied. A `summary` block totals orphan and
-amount-mismatch counts. This is the answer key a downstream reconciliation
-pipeline's output should be scored against for precision/recall.
+amount-mismatch counts. This is the answer key: you can score a downstream reconciliation
+pipeline's output against it for precision and recall.

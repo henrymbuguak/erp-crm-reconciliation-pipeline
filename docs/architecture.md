@@ -12,7 +12,7 @@ divergence this tool reproduces on purpose.
 | Format | Flat CSV (`erp/customers.csv`, `erp/invoices.csv`, `erp/payments.csv`) | Nested JSON (`crm/customers.json`) |
 | Field naming | Legacy `UPPER_SNAKE_CASE` (`CUST_ID`, `INV_NO`) | `camelCase` (`customerId`, `invoiceNumber`) |
 | Business keys | `C000001`, `INV-000001`, `PMT-000001` | `CUST-000001`, `INV000001`, `PAY000001` |
-| Structure | One row per invoice/payment | Invoices nested under customers; payments nested under invoices |
+| Structure | One row per invoice/payment | Invoices nest under customers, and payments nest under invoices |
 
 Both exports are projections of the same internal, seeded "ground truth"
 entities, so a correct reconciliation pipeline should be able to match them
@@ -35,18 +35,19 @@ flowchart TD
     CRM --> CRMFiles[("crm/customers.json")]
 ```
 
-**Design principle:** structural cross-system discrepancies (a record
-existing in only one system, or a payment amount that legitimately differs
-between systems) are decided once, in the generators, since they require
-knowledge of *both* systems at once. Cosmetic messiness (bad date formats,
-missing values, encoding issues, duplicate rows) is applied independently,
-per export, in `datagen.messiness` -- so the ERP and CRM copies of the same
-data diverge realistically instead of being corrupted identically.
+**Design principle:** the generators decide structural cross-system
+discrepancies once -- for example, a record existing in only one system, or
+a payment amount that legitimately differs between systems -- because that
+decision requires knowledge of *both* systems at once. `datagen.messiness`
+then applies cosmetic messiness (bad date formats, missing values, encoding
+issues, duplicate rows) independently per export, so the ERP and CRM copies
+of the same data diverge realistically instead of matching each other's
+corruption exactly.
 
-Reproducibility is achieved by deriving all randomness -- including internal
-correlation UUIDs -- from a single master seed via
-[`numpy.random.SeedSequence.spawn`](reference/api.md#datagen.rng), rather
-than relying on any OS-level randomness.
+All randomness -- including internal correlation UUIDs -- derives from a
+single master seed via
+[`numpy.random.SeedSequence.spawn`](reference/api.md#datagen.rng), so
+reproducibility doesn't depend on any OS-level randomness.
 
 ## Module layout
 
@@ -66,8 +67,9 @@ src/datagen/
 ## Where this fits in the larger pipeline
 
 Dataset generation is the foundation for a broader **Legacy ERP/CRM
-Integration & Data Cleaning Pipeline**. The pieces below this line are not
-yet built; solid boxes are implemented, dashed boxes are planned.
+Integration and Data Cleaning Pipeline**. The pieces below this line
+aren't built yet: solid boxes mark what exists today, and dashed boxes
+mark what's planned.
 
 ```mermaid
 flowchart LR
