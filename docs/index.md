@@ -6,6 +6,8 @@ reconcile them back into a single source of truth.
 [Get started](getting-started.md){ .md-button .md-button--primary }
 [Explore the architecture](architecture.md){ .md-button }
 
+![Demo: generating a dataset, reconciling it, and optionally loading the result into Postgres](assets/demo.gif)
+
 ## What the repository demonstrates
 
 - Synthetic customer/invoice/payment generation with [Faker](https://faker.readthedocs.io/) and [mimesis](https://mimesis.name/), fully reproducible from a single seed.

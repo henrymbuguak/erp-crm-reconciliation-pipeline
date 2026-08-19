@@ -1,0 +1,57 @@
+name: Demo GIF
+
+on:
+  workflow_dispatch: {}
+  push:
+    branches: [main]
+    paths:
+      - demo/demo.tape
+      - .github/workflows/demo.yml
+
+permissions:
+  contents: write
+
+jobs:
+  demo:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: reconcile
+          POSTGRES_PASSWORD: reconcile
+          POSTGRES_DB: reconcile
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U reconcile"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v10.0.1
+        with:
+          enable-cache: true
+          cache-dependency-glob: "pyproject.toml"
+
+      - name: Set up Python
+        run: uv python install 3.12
+
+      - name: Install dependencies
+        run: uv sync
+
+      - name: Render demo GIF
+        uses: charmbracelet/vhs-action@v2
+        with:
+          path: demo/demo.tape
+
+      - name: Commit demo GIF
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: update demo GIF"
+          commit_user_name: vhs-action
+          commit_user_email: actions@github.com
+          file_pattern: docs/assets/demo.gif

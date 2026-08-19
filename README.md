@@ -14,6 +14,8 @@ A two-part project for testing legacy data migrations: a synthetic
 (CRM) dataset generator**, and a **reconciliation pipeline** that ingests,
 cleans, and matches the two systems' records back together.
 
+![Demo: generating a dataset, reconciling it, and optionally loading the result into Postgres](docs/assets/demo.gif)
+
 **Step 1 -- `datagen`:** produces two deliberately divergent exports of the
 _same_ underlying business data: an ERP-style flat CSV export and a
 CRM-style nested JSON export, complete with realistic "messy data" defects
