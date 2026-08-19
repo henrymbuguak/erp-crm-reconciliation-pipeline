@@ -202,3 +202,9 @@ is local-only and never affects other clones or CI, which resolve against
 standard PyPI. `uv.lock` is likewise gitignored so a mirror-specific lock
 never leaks into the shared repo -- each environment resolves its own lock
 from `pyproject.toml`.
+
+Because `uv.toml` is gitignored, it isn't shared by `git worktree`: only
+Git-tracked files are common across worktrees, so each worktree of this
+repo needs its own copy. If `uv sync` in a given worktree tries to reach
+`files.pythonhosted.org` directly instead of your mirror, that's the
+usual cause -- copy `uv.toml.example` to `uv.toml` in that worktree too.

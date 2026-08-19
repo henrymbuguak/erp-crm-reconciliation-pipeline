@@ -73,3 +73,7 @@ mirror, copy `uv.toml.example` (in the repository root) to `uv.toml`
 (gitignored) and point it at your mirror. `uv.lock` is likewise gitignored
 so a mirror-specific lock never leaks into the shared repo -- each
 environment resolves its own lock from `pyproject.toml`.
+
+Because `uv.toml` is gitignored, `git worktree` doesn't share it: only
+Git-tracked files are common across worktrees, so copy it into each
+worktree of this repo that needs it.
