@@ -6,6 +6,69 @@ mermaid.initialize({
 });
 
 let diagramId = 0;
+let lightbox;
+
+// Singleton overlay, reused by every diagram, created lazily on first click.
+function getLightbox() {
+  if (lightbox) return lightbox;
+
+  const overlay = document.createElement("div");
+  overlay.className = "mermaid-lightbox";
+  overlay.setAttribute("role", "dialog");
+  overlay.setAttribute("aria-modal", "true");
+  overlay.innerHTML = `
+    <button type="button" class="mermaid-lightbox__close" aria-label="Close">&times;</button>
+    <div class="mermaid-lightbox__content"></div>
+  `;
+  document.body.append(overlay);
+
+  const closeButton = overlay.querySelector(".mermaid-lightbox__close");
+  let triggerElement;
+
+  const close = () => {
+    overlay.classList.remove("mermaid-lightbox--open");
+    triggerElement?.focus();
+  };
+  const open = (triggeredBy) => {
+    triggerElement = triggeredBy;
+    overlay.classList.add("mermaid-lightbox--open");
+    closeButton.focus();
+  };
+
+  overlay.addEventListener("click", (event) => {
+    if (!event.target.closest("svg")) close();
+  });
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && overlay.classList.contains("mermaid-lightbox--open")) close();
+  });
+
+  lightbox = { overlay, open };
+  return lightbox;
+}
+
+function makeZoomable(container) {
+  container.setAttribute("role", "button");
+  container.setAttribute("tabindex", "0");
+  container.setAttribute("aria-label", "View diagram full size");
+
+  const openFromContainer = () => {
+    const svg = container.querySelector("svg");
+    if (!svg) return;
+
+    const { overlay, open } = getLightbox();
+    const content = overlay.querySelector(".mermaid-lightbox__content");
+    content.replaceChildren(svg.cloneNode(true));
+    open(container);
+  };
+
+  container.addEventListener("click", openFromContainer);
+  container.addEventListener("keydown", (event) => {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      openFromContainer();
+    }
+  });
+}
 
 document$.subscribe(async () => {
   const diagrams = [...document.querySelectorAll(".mermaid-source")];
@@ -36,6 +99,7 @@ document$.subscribe(async () => {
           svgElement.style.width = `${viewBox[2]}px`;
         }
 
+        makeZoomable(container);
         bindFunctions?.(container);
       } catch (error) {
         container.replaceWith(element);

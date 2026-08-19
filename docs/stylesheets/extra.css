@@ -1,4 +1,5 @@
 .mermaid {
+  cursor: zoom-in;
   overflow-x: auto;
   padding-block: 0.5rem;
 }
@@ -7,4 +8,41 @@
   display: block;
   height: auto;
   margin-inline: auto;
+}
+
+.mermaid-lightbox {
+  background: rgba(0, 0, 0, 0.85);
+  display: none;
+  inset: 0;
+  overflow: auto;
+  padding: 3rem 2rem;
+  position: fixed;
+  z-index: 1000;
+}
+
+.mermaid-lightbox--open {
+  display: flex;
+}
+
+.mermaid-lightbox__content {
+  margin: auto;
+}
+
+.mermaid-lightbox__content svg {
+  background: var(--md-default-bg-color);
+  border-radius: 0.2rem;
+  cursor: default;
+  padding: 1rem;
+}
+
+.mermaid-lightbox__close {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  font-size: 2rem;
+  line-height: 1;
+  position: fixed;
+  right: 1.5rem;
+  top: 1rem;
 }
