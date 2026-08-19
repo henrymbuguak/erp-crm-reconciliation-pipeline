@@ -3,7 +3,7 @@
 To keep dataset generation fully reproducible while still letting each
 component (customers, invoices, payments, per-system messiness, ...) draw
 independent random streams, we derive child generators from a single master
-seed via :class:`numpy.random.SeedSequence`. This avoids the common pitfall
+seed via `numpy.random.SeedSequence`. This avoids the common pitfall
 of reusing one global RNG (which makes output order-sensitive) while still
 guaranteeing that a given master seed always reproduces the same dataset.
 """

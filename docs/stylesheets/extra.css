@@ -1,0 +1,19 @@
+.mermaid {
+  overflow-x: auto;
+  padding-block: 0.5rem;
+}
+
+.mermaid svg {
+  display: block;
+  height: auto;
+  margin-inline: auto;
+  max-width: 100%;
+}
+
+@media screen and (max-width: 44.984375em) {
+  .mermaid svg {
+    margin-inline: 0;
+    max-width: none;
+    min-width: 42rem;
+  }
+}

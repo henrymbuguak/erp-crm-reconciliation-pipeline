@@ -32,6 +32,10 @@ dev = [
     "ruff>=0.16.2",
     "types-pyyaml>=6.0.12.20260724",
 ]
+docs = [
+    "mkdocs-material>=9.7.7",
+    "mkdocstrings[python]>=1.0.6",
+]
 
 [tool.ruff]
 line-length = 100

@@ -1,0 +1,78 @@
+site_name: ERP/CRM Reconciliation Pipeline
+site_description: Synthetic ERP/CRM dataset generation and reconciliation tooling for legacy data migration testing.
+site_url: https://henrymbuguak.github.io/erp-crm-reconciliation-pipeline/
+repo_url: https://github.com/henrymbuguak/erp-crm-reconciliation-pipeline
+repo_name: henrymbuguak/erp-crm-reconciliation-pipeline
+edit_uri: edit/main/docs/
+
+extra_javascript:
+  - path: javascripts/mermaid.mjs
+    type: module
+
+extra_css:
+  - stylesheets/extra.css
+
+theme:
+  name: material
+  features:
+    - navigation.footer
+    - navigation.sections
+    - navigation.top
+    - content.action.edit
+    - content.code.copy
+    - search.highlight
+    - search.suggest
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: teal
+      accent: deep orange
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: teal
+      accent: amber
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid-source
+          format: !!python/name:pymdownx.superfences.fence_code_format
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          paths: [src]
+          options:
+            show_source: true
+            show_root_heading: true
+            show_root_full_path: false
+            separate_signature: true
+            merge_init_into_class: true
+            docstring_style: sphinx
+
+nav:
+  - Home: index.md
+  - Getting started: getting-started.md
+  - Architecture: architecture.md
+  - Reference:
+      - CLI: reference/cli.md
+      - Data model: reference/data-model.md
+      - API: reference/api.md

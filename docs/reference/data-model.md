@@ -1,0 +1,79 @@
+# Data model reference
+
+## Canonical entities
+
+The ERP and CRM exports are both projections of the same internal
+[canonical entities](api.md#datagen.identities): `CanonicalCustomer`,
+`CanonicalInvoice`, and `CanonicalPayment`. See
+[`src/datagen/identities.py`](https://github.com/henrymbuguak/erp-crm-reconciliation-pipeline/blob/main/src/datagen/identities.py)
+for the full field list.
+
+## Field mapping: ERP vs. CRM
+
+### Customers
+
+| Canonical field | ERP CSV column | CRM JSON field |
+| --- | --- | --- |
+| `customer_id` (internal only) | -- | -- |
+| business key | `CUST_ID` (e.g. `C000001`) | `customerId` (e.g. `CUST-000001`) |
+| `full_name` | `CUST_NAME` | `customerName` |
+| `email` | `EMAIL_ADDR` | `email` |
+| `phone` | `PHONE_NUM` | `phone` |
+| `street` | `ADDR_LINE1` | `address.street` |
+| `city` | `CITY` | `address.city` |
+| `region` | `REGION` | `address.region` |
+| `postal_code` | `POSTAL_CD` | `address.postalCode` |
+| `country` | `COUNTRY` | `address.country` |
+| `created_at` | `CREATED_DT` | `createdAt` |
+
+### Invoices
+
+| Canonical field | ERP CSV column | CRM JSON field |
+| --- | --- | --- |
+| business key | `INV_NO` (e.g. `INV-000001`) | `invoiceNumber` (e.g. `INV000001`), nested under the owning customer |
+| `issue_date` | `ISSUE_DT` | `issueDate` |
+| `due_date` | `DUE_DT` | `dueDate` |
+| `currency` | `CURR_CD` | `currency` |
+| `amount` | `AMT` | `amount` |
+| `status` | `STATUS_CD` (upper-cased) | `status` |
+| `exists_in_erp` / `exists_in_crm` | row omitted if `False` | entry omitted if `False` |
+
+### Payments
+
+| Canonical field | ERP CSV column | CRM JSON field |
+| --- | --- | --- |
+| business key | `PMT_NO` (e.g. `PMT-000001`) | `paymentNumber` (e.g. `PAY000001`), nested under the owning invoice |
+| `payment_date` | `PMT_DT` | `paymentDate` |
+| `amount` | `AMT` (`amount + erp_amount_drift`) | `amount` (canonical amount, undrifted) |
+| `method` | `PMT_METHOD_CD` (upper-cased) | `method` |
+
+`erp_amount_drift` exists specifically so the ERP-recorded amount can
+legitimately differ from the CRM/true amount -- simulating bank fees or FX
+rounding that a real reconciliation pipeline must detect rather than
+silently average away.
+
+## Messiness knobs
+
+All ratios are 0.0-1.0 and are applied independently, per export, with
+independently-seeded RNG streams (see
+[`datagen.rng.spawn_rngs`](api.md#datagen.rng)) -- so the ERP and CRM copies
+of the same underlying row diverge realistically instead of being corrupted
+identically.
+
+| Knob | Module | Effect |
+| --- | --- | --- |
+| `missing_value_ratio` | `datagen.messiness.missing` | Replaces cells with `None`, `""`, `"N/A"`, `"NULL"`, `"--"`, or `"unknown"` |
+| `bad_date_ratio` | `datagen.messiness.dates` | Rewrites dates as `MM/DD/YYYY`, `DD-MM-YYYY`, a Unix timestamp, or an invalid placeholder like `0000-00-00` |
+| `encoding_issue_ratio` | `datagen.messiness.encoding` | Corrupts text with mojibake (UTF-8 bytes misread as CP-1252) |
+| `duplicate_ratio` | `datagen.messiness.duplicates` | Appends near-duplicate rows (whitespace/case perturbed on a non-key column) |
+| `orphan_ratio` | `datagen.generators.invoices` / `payments` | Decides which invoices/payments exist in only one system |
+| `amount_drift_ratio` | `datagen.generators.payments` + `datagen.messiness.mismatches` | Decides which payments get a legitimate ERP/CRM amount mismatch |
+
+## Ground truth mapping
+
+With `--with-ground-truth`, `ground_truth.json` records, for every invoice
+and payment: whether it exists in ERP, CRM, or both (`expected_match`), its
+business key in each system (or `null` if absent), and -- for payments --
+the exact `amount_drift` applied. A `summary` block totals orphan and
+amount-mismatch counts. This is the answer key a downstream reconciliation
+pipeline's output should be scored against for precision/recall.
