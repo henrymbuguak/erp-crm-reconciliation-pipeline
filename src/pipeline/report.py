@@ -39,6 +39,17 @@ class IngestCounts:
     crm_invoices: int
     crm_payments: int
 
+    @property
+    def total(self) -> int:
+        return (
+            self.erp_customers
+            + self.erp_invoices
+            + self.erp_payments
+            + self.crm_customers
+            + self.crm_invoices
+            + self.crm_payments
+        )
+
 
 @dataclass
 class PrecisionRecall:
@@ -100,6 +111,26 @@ def _orphans(
     erp_only = [entry for entry in entries if entry.erp_key is not None and entry.crm_key is None]
     crm_only = [entry for entry in entries if entry.erp_key is None and entry.crm_key is not None]
     return erp_only, crm_only
+
+
+def _render_executive_summary(
+    ingest_counts: IngestCounts,
+    quarantine: list[QuarantineEntry],
+    execution_time_seconds: float | None,
+) -> str:
+    """Headline stakeholder view: volume, success rate, and cost -- detail sections follow below."""
+    total = ingest_counts.total
+    quarantined = len(quarantine)
+    success_rate = f"{(total - quarantined) / total:.1%}" if total else "n/a"
+    lines = [
+        "## Executive summary\n",
+        f"- Total records ingested: {total}",
+        f"- Success rate (ingested, not quarantined): {success_rate}",
+        f"- Records quarantined: {quarantined}",
+    ]
+    if execution_time_seconds is not None:
+        lines.append(f"- Execution time: {execution_time_seconds:.2f}s")
+    return "\n".join(lines) + "\n"
 
 
 def _render_ingest_section(counts: IngestCounts) -> str:
@@ -208,11 +239,13 @@ def render_report(
     crm_payments: list[CleanPayment],
     duplicate_logs: list[DuplicateMergeLog] | None = None,
     precision_recall: PrecisionRecall | None = None,
+    execution_time_seconds: float | None = None,
     sample_size: int = 5,
 ) -> str:
     drifts = compute_payment_drift(crosswalk, erp_payments, crm_payments)
     sections = [
         "# Reconciliation Report\n",
+        _render_executive_summary(ingest_counts, quarantine, execution_time_seconds),
         _render_ingest_section(ingest_counts),
         _render_match_rate_section(crosswalk),
         _render_quarantine_section(quarantine),

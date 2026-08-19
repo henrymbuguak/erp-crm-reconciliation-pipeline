@@ -112,6 +112,31 @@ def test_render_report_omits_precision_recall_when_not_provided() -> None:
     assert "Precision" not in report
 
 
+def test_render_report_executive_summary_reports_success_rate_and_execution_time() -> None:
+    quarantine = [
+        QuarantineEntry(
+            entity_type=EntityType.CUSTOMER,
+            source_system=SourceSystem.ERP,
+            reason_code=ReasonCode.AMBIGUOUS_MATCH,
+            stage="resolution",
+            original_data={},
+        )
+    ]
+
+    report = render_report(_ingest_counts(), [], quarantine, [], [], execution_time_seconds=1.234)
+
+    assert "Total records ingested: 6" in report
+    assert "Success rate (ingested, not quarantined): 83.3%" in report
+    assert "Records quarantined: 1" in report
+    assert "Execution time: 1.23s" in report
+
+
+def test_render_report_omits_execution_time_when_not_provided() -> None:
+    report = render_report(_ingest_counts(), [], [], [], [])
+
+    assert "Execution time" not in report
+
+
 def test_render_report_includes_duplicates_section() -> None:
     duplicate_logs = [
         DuplicateMergeLog(

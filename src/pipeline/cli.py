@@ -8,6 +8,7 @@ separately against a dataset generated with `--with-ground-truth` for that.
 
 from __future__ import annotations
 
+import time
 from pathlib import Path
 from typing import Annotated
 
@@ -64,7 +65,9 @@ def run(
     ] = None,
 ) -> None:
     """Run ingest -> dedupe -> clean -> resolve over DATA_DIR and write the crosswalk/report."""
+    start = time.perf_counter()
     result = run_pipeline(data_dir, customer_match_threshold=customer_threshold)
+    execution_time_seconds = time.perf_counter() - start
 
     merged_crosswalk = upsert_crosswalk(result.crosswalk, crosswalk_path)
     write_quarantine_log(result.quarantine, quarantine_path)
@@ -77,11 +80,18 @@ def run(
         erp_payments=result.erp_payments,
         crm_payments=result.crm_payments,
         duplicate_logs=result.duplicate_logs,
+        execution_time_seconds=execution_time_seconds,
     )
     write_report(report, report_path)
 
     _print_summary(
-        result, merged_crosswalk, report_path, crosswalk_path, quarantine_path, duplicate_log_path
+        result,
+        merged_crosswalk,
+        report_path,
+        crosswalk_path,
+        quarantine_path,
+        duplicate_log_path,
+        execution_time_seconds,
     )
 
     if postgres_dsn is not None:
@@ -105,6 +115,7 @@ def _print_summary(
     crosswalk_path: Path,
     quarantine_path: Path,
     duplicate_log_path: Path,
+    execution_time_seconds: float,
 ) -> None:
     table = Table(title="Match rate by entity type")
     table.add_column("Entity")
@@ -128,6 +139,7 @@ def _print_summary(
         f"Duplicate-merge log written to [bold]{duplicate_log_path}[/bold] "
         f"({len(result.duplicate_logs)} groups collapsed)"
     )
+    console.print(f"Execution time: {execution_time_seconds:.2f}s")
 
 
 if __name__ == "__main__":
