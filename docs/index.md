@@ -14,6 +14,7 @@ reconcile them back into a single source of truth.
 - Genuine cross-system discrepancies -- orphan records and legitimate ERP/CRM amount drift -- with an optional `ground_truth.json` answer key for scoring a downstream reconciliation pipeline's precision/recall.
 - A reconciliation pipeline (`Polars` + `Pydantic`) that ingests both exports, cleans and validates every row, resolves ERP records against CRM records by name/email/phone/date/amount proximity (never by business-key format), and produces a crosswalk plus a Markdown reconciliation report.
 - A [Typer](https://typer.tiangolo.com/) CLI for both stages (`datagen generate` and `reconcile`), `pydantic`-validated configuration and data models, and a fully typed (`mypy --strict`) codebase with high test coverage.
+- A written specification, [`CLAUDE.md`](https://github.com/henrymbuguak/erp-crm-reconciliation-pipeline/blob/main/CLAUDE.md), that pins down the pipeline's business rules (the four resolution outcomes, tolerance thresholds derived from the generator, "ask rather than guess" on ambiguity) before any pipeline code existed -- and caught a real contradiction in an early documentation draft.
 
 ## Choose a path
 

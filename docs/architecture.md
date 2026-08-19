@@ -110,7 +110,7 @@ for the full `reconcile` flag list.
 ## Reconciliation pipeline architecture
 
 ```mermaid
-flowchart TD
+flowchart LR
     Ingest["ingest.py<br/>polars.read_csv / read_json"] --> Dedupe
     Dedupe["cleaners/duplicates.py<br/>collapse intra-system near-duplicates"] --> Clean
     Clean["cleaners/{dates,encoding,missing}.py<br/>repair recoverable messiness"] --> Validate

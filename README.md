@@ -162,6 +162,35 @@ implementation and are worth knowing before reading the code:
   counterpart in the other system) is a valid outcome, not a failure, and
   is never quarantined.
 
+## `CLAUDE.md`: the spec that governs the pipeline
+
+[`CLAUDE.md`](CLAUDE.md) is a written specification for the `pipeline`
+package, produced _before_ any pipeline code, that pins down the business
+rules a real reconciliation project lives or dies on -- the kind of
+decisions that are easy to leave implicit and get wrong:
+
+- **Four resolution outcomes, not two.** A record either matches, is a
+  genuine one-sided orphan, is ambiguous (tied candidates -- never guess),
+  or is invalid (failed cleaning). Collapsing "orphan" into "quarantine"
+  would make a normal, two-system dataset look like a broken pipeline in
+  the final report.
+- **Concrete, derived thresholds.** Match tolerances (date proximity, the
+  amount-drift epsilon, the fuzzy-match confidence cutoff) are grounded in
+  how `datagen` actually generates data, not guessed round numbers -- see
+  [`docs/reference/data-model.md`](https://henrymbuguak.github.io/erp-crm-reconciliation-pipeline/reference/data-model/).
+- **An explicit instruction to stop and ask.** When a business rule is
+  genuinely ambiguous, the spec says to surface that ambiguity instead of
+  picking a silent default.
+
+Keeping this contract in one file paid off directly: while rewriting the
+docs, an earlier draft of
+[`docs/architecture.md`](https://henrymbuguak.github.io/erp-crm-reconciliation-pipeline/architecture/)
+claimed entity resolution normalized business-key IDs across systems --
+which directly contradicts the "no ID-format shortcuts" rule above and
+isn't what `resolve.py` actually does. Having the rule written down made
+that contradiction checkable, not a matter of re-reading the
+implementation and hoping to notice.
+
 ## Architecture
 
 ```
