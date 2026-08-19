@@ -1,4 +1,4 @@
-site_name: ERP/CRM Reconciliation Pipeline
+site_name: ERP/CRM reconciliation pipeline
 site_description: Synthetic ERP/CRM dataset generation and reconciliation tooling for legacy data migration testing.
 site_url: https://henrymbuguak.github.io/erp-crm-reconciliation-pipeline/
 repo_url: https://github.com/henrymbuguak/erp-crm-reconciliation-pipeline

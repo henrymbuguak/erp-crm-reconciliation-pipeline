@@ -1,22 +1,24 @@
-# erp-crm-reconciliation-pipeline
+# ERP/CRM reconciliation pipeline
 
 [![CI](https://github.com/henrymbuguak/erp-crm-reconciliation-pipeline/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/henrymbuguak/erp-crm-reconciliation-pipeline/actions/workflows/ci.yml)
 [![Pages](https://github.com/henrymbuguak/erp-crm-reconciliation-pipeline/actions/workflows/pages.yml/badge.svg?branch=main)](https://github.com/henrymbuguak/erp-crm-reconciliation-pipeline/actions/workflows/pages.yml)
 
 📖 **[Read the full documentation](https://henrymbuguak.github.io/erp-crm-reconciliation-pipeline/)**
 
-Synthetic **ERP + CRM dataset generator** for building and testing a
+Synthetic **Enterprise Resource Planning (ERP) and Customer Relationship
+Management (CRM) dataset generator** for building and testing a
 customer/invoice/payment reconciliation pipeline.
 
-The `datagen` CLI produces two deliberately divergent exports of the *same*
-underlying business data -- an ERP-style flat CSV export and a CRM-style
-nested JSON export -- complete with realistic "messy data" defects (bad date
-formats, missing values, mixed encodings, duplicate rows) and genuine
-cross-system discrepancies (records existing in only one system, payment
-amounts that legitimately differ between systems). A `ground_truth.json` can
-optionally be emitted alongside the data, recording exactly which records
-should reconcile, so a reconciliation pipeline's output can be scored for
-precision/recall against a known-correct answer key.
+The `datagen` command-line tool produces two deliberately divergent exports
+of the *same* underlying business data: an ERP-style flat CSV export and a
+CRM-style nested JSON export, complete with realistic "messy data" defects
+(bad date formats, missing values, mixed encodings, duplicate rows) and
+genuine cross-system discrepancies -- records existing in only one system,
+and payment amounts that legitimately differ between systems. You can
+optionally emit a `ground_truth.json` alongside the data, recording exactly
+which records should reconcile, so you can score a reconciliation
+pipeline's output for precision and recall against a known-correct answer
+key.
 
 ## Why two divergent exports instead of one clean dataset?
 
@@ -30,7 +32,7 @@ divergence this tool reproduces on purpose:
 | Format | Flat CSV (`erp/customers.csv`, `erp/invoices.csv`, `erp/payments.csv`) | Nested JSON (`crm/customers.json`) |
 | Field naming | Legacy `UPPER_SNAKE_CASE` (`CUST_ID`, `INV_NO`) | `camelCase` (`customerId`, `invoiceNumber`) |
 | Business keys | `C000001`, `INV-000001`, `PMT-000001` | `CUST-000001`, `INV000001`, `PAY000001` |
-| Structure | One row per invoice/payment | Invoices nested under customers; payments nested under invoices |
+| Structure | One row per invoice/payment | Invoices nest under customers, and payments nest under invoices |
 
 Both exports are projections of the same internal, seeded "ground truth"
 entities (see [`src/datagen/identities.py`](src/datagen/identities.py)), so a
@@ -59,8 +61,8 @@ data/
   generation_config.yaml   # the exact config used, for reproducibility/audit
 ```
 
-Re-running with the same `--seed` (and the same other options) always
-reproduces byte-identical output.
+Re-running with the same `--seed` and other options always reproduces
+byte-identical output.
 
 ### CLI reference
 
@@ -75,12 +77,12 @@ if given, or on top of defaults otherwise):
 
 | Option | Default | Meaning |
 |---|---|---|
-| `--seed` | 42 | Master RNG seed; same seed -> same dataset |
+| `--seed` | 42 | Master RNG seed -- the same seed always produces the same dataset |
 | `--customers` | 200 | Number of customers to generate |
 | `--min-invoices` / `--max-invoices` | 1 / 5 | Invoices generated per customer |
 | `--payment-coverage` | 0.85 | Fraction of eligible invoices that receive a payment |
 | `--output-dir` | `data` | Where to write the export |
-| `--config` | -- | Base config YAML (see below); other flags still override it |
+| `--config` | -- | Base config YAML, described below -- other flags still override it |
 | `--with-ground-truth` / `--no-ground-truth` | off | Emit `ground_truth.json` |
 | `--missing-value-ratio`, `--bad-date-ratio`, `--encoding-issue-ratio`, `--duplicate-ratio`, `--orphan-ratio`, `--amount-drift-ratio` | see below | Messiness knobs (0.0-1.0) |
 
@@ -98,7 +100,7 @@ corresponding value from `--config`.
 
 See [`examples/sample_dataset`](examples/sample_dataset) for a small,
 committed dataset (8 customers, `--seed 1`) you can inspect without running
-anything. It was generated with:
+anything. The following command created it:
 
 ```powershell
 uv run datagen generate --seed 1 --customers 8 --with-ground-truth --output-dir examples/sample_dataset
@@ -129,18 +131,19 @@ src/datagen/
   cli.py                Typer CLI
 ```
 
-**Design principle:** structural cross-system discrepancies (a record
-existing in only one system, or a payment amount that legitimately differs
-between systems) are decided once, in the generators, since they require
-knowledge of *both* systems at once. Cosmetic messiness (bad date formats,
-missing values, encoding issues, duplicate rows) is applied independently,
-per export, in `messiness/` -- so the ERP and CRM copies of the same data
-diverge realistically instead of being corrupted identically.
+**Design principle:** the generators decide structural cross-system
+discrepancies once -- for example, a record existing in only one system, or
+a payment amount that legitimately differs between systems -- because that
+decision requires knowledge of both systems at once. The `messiness/`
+package then applies cosmetic messiness (bad date formats, missing values,
+encoding issues, duplicate rows) independently per export, so the ERP and
+CRM copies of the same data diverge realistically instead of matching each
+other's corruption exactly.
 
-Reproducibility is achieved by deriving all randomness -- including internal
-correlation UUIDs -- from a single master seed via
-[`numpy.random.SeedSequence.spawn`](src/datagen/rng.py), rather than relying
-on any OS-level randomness.
+All randomness -- including internal correlation UUIDs -- derives from a
+single master seed via
+[`numpy.random.SeedSequence.spawn`](src/datagen/rng.py), so reproducibility
+doesn't depend on any OS-level randomness.
 
 ## Development
 
@@ -153,15 +156,36 @@ uv run mypy                # strict type checking
 uv run pre-commit install  # run the above automatically on every commit
 ```
 
-CI (`.github/workflows/ci.yml`) runs the same checks on every push/PR.
+`.github/workflows/ci.yml` runs the same checks on every push and pull
+request.
+
+### Documentation style
+
+Prose in `README.md` and `docs/**/*.md` follows the [Google developer
+documentation style guide](https://developers.google.com/style/), enforced
+by [Vale](https://vale.sh/) with the community-maintained
+[Google style package](https://github.com/errata-ai/Google) (not affiliated
+with or endorsed by Google). This project deliberately overrides two rules
+for its domain, documented in `.vale/styles/Project/`: it keeps "CLI"
+instead of Google's suggested "command-line tool," and it doesn't treat
+"camelCase" as jargon, since both are standard, unambiguous vocabulary for
+its developer audience. Check your writing locally:
+
+```powershell
+choco install vale   # or see https://vale.sh/docs/install for other platforms
+vale sync
+vale README.md docs
+```
+
+CI runs the same check on every push and pull request.
 
 ### Documentation site
 
-The full documentation (architecture diagrams, CLI reference, data model,
-and an auto-generated API reference) is built with
-[MkDocs Material](https://squidfunk.github.io/mkdocs-material/) and
-published to GitHub Pages by `.github/workflows/pages.yml` on every push to
-`main`. To preview it locally:
+[MkDocs Material](https://squidfunk.github.io/mkdocs-material/) builds the
+full documentation -- architecture diagrams, CLI reference, data model, and
+an auto-generated API reference -- and `.github/workflows/pages.yml`
+publishes it to GitHub Pages on every push to `main`. To preview it
+locally:
 
 ```powershell
 uv sync --group docs

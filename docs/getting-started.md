@@ -22,9 +22,9 @@ data/
   generation_config.yaml   # the exact config used, for reproducibility/audit
 ```
 
-Re-running with the same `--seed` (and the same other options) always
-reproduces byte-identical output -- every source of randomness, including
-internal correlation UUIDs, is derived from a single master seed.
+Re-running with the same `--seed` and other options always reproduces
+byte-identical output -- every source of randomness, including internal
+correlation UUIDs, derives from a single master seed.
 
 ## CLI reference
 

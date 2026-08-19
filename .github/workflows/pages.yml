@@ -5,16 +5,24 @@ on:
     branches: [main]
     paths:
       - ".github/workflows/pages.yml"
+      - ".vale.ini"
+      - ".vale/styles/Project/**"
+      - ".vale/styles/config/**"
       - "docs/**"
       - "mkdocs.yml"
       - "pyproject.toml"
+      - "README.md"
       - "src/**"
   pull_request:
     paths:
       - ".github/workflows/pages.yml"
+      - ".vale.ini"
+      - ".vale/styles/Project/**"
+      - ".vale/styles/config/**"
       - "docs/**"
       - "mkdocs.yml"
       - "pyproject.toml"
+      - "README.md"
       - "src/**"
   workflow_dispatch:
 
@@ -23,6 +31,33 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  lint-docs:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Install Vale
+        run: |
+          curl -sSfL -o vale.tar.gz \
+            https://github.com/errata-ai/vale/releases/download/v3.17.1/vale_3.17.1_Linux_64-bit.tar.gz
+          mkdir -p "$HOME/.local/bin"
+          tar -xzf vale.tar.gz -C "$HOME/.local/bin" vale
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
+      - name: Sync Vale styles
+        run: vale sync
+
+      - name: Lint docs against the Google developer documentation style guide
+        # docs/reference/api.md is mkdocstrings-generated from source
+        # docstrings (already reviewed as prose in src/datagen/), and its
+        # rendered function signatures contain lowercase code identifiers
+        # (like the "rng" parameter name) that trip up casing-consistency
+        # checks derived from our Vocab. Exclude it from prose linting.
+        run: vale --glob='!**/api.md' README.md docs
+
   build:
     runs-on: ubuntu-latest
     timeout-minutes: 15
@@ -54,7 +89,7 @@ jobs:
 
   deploy:
     if: github.event_name != 'pull_request'
-    needs: build
+    needs: [build, lint-docs]
     runs-on: ubuntu-latest
     permissions:
       pages: write

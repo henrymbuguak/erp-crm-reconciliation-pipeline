@@ -1,0 +1,13 @@
+extends: existence
+message: "Avoid the jargon '%s'."
+link: https://developers.google.com/style/jargon
+level: suggestion
+ignorecase: true
+# This is Google's Jargon.yml with "camel ?case" removed: we use "camelCase"
+# literally and correctly as a naming-convention term throughout our data
+# model reference, not as figurative jargon. See Project/WordList.yml for
+# the same reasoning pattern applied to another rule.
+tokens:
+  - break-glass
+  - out-of-the-box
+  - swim ?lane

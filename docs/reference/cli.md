@@ -12,12 +12,12 @@ on top of defaults otherwise.
 
 | Option | Default | Meaning |
 | --- | --- | --- |
-| `--seed` | 42 | Master RNG seed; same seed -> same dataset |
+| `--seed` | 42 | Master RNG seed -- the same seed always produces the same dataset |
 | `--customers` | 200 | Number of customers to generate |
 | `--min-invoices` / `--max-invoices` | 1 / 5 | Invoices generated per customer |
 | `--payment-coverage` | 0.85 | Fraction of eligible invoices that receive a payment |
 | `--output-dir` | `data` | Where to write the export |
-| `--config` | -- | Base config YAML; other flags still override it |
+| `--config` | -- | Base config YAML -- other flags still override it |
 | `--with-ground-truth` / `--no-ground-truth` | off | Emit `ground_truth.json` |
 | `--missing-value-ratio` | 0.05 | Fraction of cells replaced with missing-value markers |
 | `--bad-date-ratio` | 0.08 | Fraction of dates rewritten inconsistently/invalidly |
@@ -28,7 +28,7 @@ on top of defaults otherwise.
 
 ## `datagen show-config`
 
-Prints the fully-resolved `GenerationConfig` as YAML, without generating
+Prints the fully resolved `GenerationConfig` as YAML, without generating
 anything. Useful as a starting point for a `--config` file:
 
 ```bash
